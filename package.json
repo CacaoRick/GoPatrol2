@@ -1,0 +1,19 @@
+{
+  "name": "gopatrol2",
+  "version": "2.0.0",
+  "description": "Coming sooooooooooooooooooooooooooooooooooooooooooooooooooooon...",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/CacaoRick/GoPatrol2.git"
+  },
+  "author": "CacaoRick",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/CacaoRick/GoPatrol2/issues"
+  },
+  "homepage": "https://github.com/CacaoRick/GoPatrol2#readme"
+}
