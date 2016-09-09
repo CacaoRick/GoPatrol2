@@ -2,11 +2,9 @@
   "name": "gopatrol2",
   "version": "0.1.0",
   "main": "main.js",
+  "bin": "./node_modules/.bin/electron",
   "scripts": {
     "start": "electron ."
-  },
-  "dependencies": {
-    "electron": "^1.3.5"
   },
   "repository": {
     "type": "git",
@@ -16,5 +14,11 @@
   "homepage": "https://github.com/CacaoRick/GoPatrol2#readme",
   "bugs": {
     "url": "https://github.com/CacaoRick/GoPatrol2/issues"
+  },
+  "dependencies": {
+  },
+  "devDependencies": {
+    "electron": "^1.3.5",
+    "electron-packager": "^8.0.0"
   }
 }
