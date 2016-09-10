@@ -8,5 +8,5 @@ var config = null;
 try {
 	config = require("./config.json");
 } catch(e) {
-	console.log("找不到 config.json，讀取預設值");
+	console.log("找不到 config.json，載入預設值");
 }
