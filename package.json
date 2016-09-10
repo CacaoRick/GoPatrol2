@@ -16,6 +16,7 @@
     "url": "https://github.com/CacaoRick/GoPatrol2/issues"
   },
   "dependencies": {
+    "bootstrap": "3.3.7",
     "jquery": "^3.1.0"
   },
   "devDependencies": {
