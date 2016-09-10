@@ -1,4 +1,22 @@
 {
-	"googleMapAPIKey": "123321",
-	"telegramBotToken": "333111"
+	"googleMapAPIKey": "",
+	"telegramBotToken": "",
+	"messageDelay": 200,
+	"enableCommand": true,
+	"showDistance": true,
+	"sendVenue": true,
+	"sendSticker": false,
+	"sendLog": false,
+	"searchDelay": 5,
+	"centerMode": true,
+	"steps": 2,
+	"centerLocation": {
+		"latitude": 25.07,
+		"longitude": 121.60
+	},
+	"admins": [],
+	"channels": [],
+	"accounts": [],
+	"pokemon_list": [],
+	"locations": []
 }
