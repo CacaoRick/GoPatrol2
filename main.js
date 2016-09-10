@@ -41,19 +41,3 @@ app.on('activate', () => {
 		createWindow();
 	}
 });
-
-// ipcMain.on('asynchronous-message', (event, arg) => {
-// 	console.log(arg);  // prints "ping"
-// 	event.sender.send('asynchronous-reply', 'pong');
-// });
-//
-// ipcMain.on('synchronous-message', (event, arg) => {
-// 	console.log(arg);  // prints "ping"
-// 	event.returnValue = 'pong';
-// });
-
-ipcMain.on('btn-click', (event, arg) => {
-	console.log(arg);
-	console.log('main process recive btn-click');
-	event.sender.send('btn-click-check', 'OK');
-});
