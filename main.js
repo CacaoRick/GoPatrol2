@@ -12,7 +12,7 @@ function createWindow() {
 	win.loadURL(`file://${__dirname}/index.html`);
 
 	// 開啟 DevTool
-	win.webContents.openDevTools();
+	//win.webContents.openDevTools();
 
 	win.on('closed', () => {
 		// 移除 window 物件的參考，通常若有多個視窗會用陣列來存，要將陣列中正確元素設為 null
