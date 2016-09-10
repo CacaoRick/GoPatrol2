@@ -6,13 +6,16 @@ let win;
 
 function createWindow() {
 	// 建立瀏覽器視窗
-	win = new BrowserWindow({width: 800, height: 600});
+	win = new BrowserWindow({
+		'minWidth': 1024,
+		'minHeight': 768
+	});
 
 	// 讀取 index.html
 	win.loadURL(`file://${__dirname}/index.html`);
 
 	// 開啟 DevTool
-	//win.webContents.openDevTools();
+	win.webContents.openDevTools();
 
 	win.on('closed', () => {
 		// 移除 window 物件的參考，通常若有多個視窗會用陣列來存，要將陣列中正確元素設為 null
