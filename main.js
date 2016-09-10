@@ -27,6 +27,7 @@ app.on('ready', createWindow);
 app.on('window-all-closed', () => {
 	// 類似 MacOS 關閉視窗後他還是會在活 Dock 上，要用 Cmd + Q 才會真的關掉
 	if (process.platform !== 'darwin') {
+		console.log("App Quit.");
 		app.quit();
 	}
 });
