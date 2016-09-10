@@ -1,19 +1,11 @@
+const jQuery = $ = require('jquery');
+const bootstrap = require('bootstrap');
 const {ipcRenderer} = require('electron');
-const $ = require('jquery');
-var defaultConfig = require('./default.json');
 
-$(document).ready(() => {
-
-	$('#btn').click(() => {
-		console.log('jq click');
-		ipcRenderer.send('btn-click');
-	});
-
-	console.log(defaultConfig.googleMapAPIKey);
-});
-
-ipcRenderer.on('btn-click-check', (event, arg) => {
-	console.log(event);
-	console.log(arg);
-	$('#show').text($('#show').text() + arg);
-});
+let defaultConfig = require('./default.json');
+var config = null;
+try {
+	config = require("./config.json");
+} catch(e) {
+	console.log("找不到 config.json，讀取預設值");
+}
