@@ -1,22 +1,27 @@
 {
+	"configVersion": 1,
 	"googleMapAPIKey": "",
 	"telegramBotToken": "",
-	"messageDelay": 200,
 	"enableCommand": true,
-	"showDistance": true,
-	"sendVenue": true,
-	"sendSticker": false,
+	"messageDelay": 200,
 	"sendLog": false,
-	"searchDelay": 5,
-	"centerMode": true,
-	"steps": 2,
-	"centerLocation": {
-		"latitude": 25.07,
-		"longitude": 121.60
+	"sendVenue": true,
+	"showDistance": true,
+	"distanceLocation": {
+		"latitude": 25.05,
+		"longitude": 121.55
 	},
 	"admins": [],
 	"channels": [],
-	"accounts": [],
+	"searchDelay": 5,
 	"pokemon_list": [],
-	"locations": []
+	"patrols": [],
+	"ivChecker": [],
+	"centerMode": true,
+	"steps": 2,
+	"centerLocation": {
+		"latitude": 25.05,
+		"longitude": 121.55
+	},
+	"locations": []	
 }
