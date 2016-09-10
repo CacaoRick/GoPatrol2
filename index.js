@@ -1,6 +1,7 @@
 const jQuery = $ = require('jquery');
 const bootstrap = require('bootstrap');
 const {ipcRenderer} = require('electron');
+require('./header.js');
 
 let defaultConfig = require('./default.json');
 var config = null;
