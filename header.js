@@ -1,0 +1,3 @@
+$(() => {
+	$('#header').load('header.html');
+});
