@@ -2,7 +2,6 @@
 	"configVersion": 1,
 	"googleMapsAPIKey": "",
 	"telegramBotToken": "",
-	"enableCommand": true,
 	"messageDelay": 200,
 	"sendVenue": true,
 	"showDistance": true,
@@ -10,6 +9,7 @@
 		"latitude": 25.05,
 		"longitude": 121.55
 	},
+	"enableCommand": true,
 	"admins": [],
 	"channels": [],
 	"requestDelay": 5,
