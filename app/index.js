@@ -2,7 +2,6 @@ const jQuery = $ = require("jquery");
 const bootstrap = require("bootstrap");
 const {ipcRenderer} = require("electron");
 
-let defaultConfig = require("./default.json");
 var config = null;
 try {
 	config = require("./config.json");
@@ -14,7 +13,7 @@ $(() => {
 	$("#header").load("header.html");
 
 	if (config == null) {
-		$("#main").load("setting-general.html");
+		$("#main").load("welcome.html");
 	} else {
 		$("#main").load("map.html");
 	}
