@@ -12,6 +12,6 @@
 	},
 	"admins": [],
 	"channels": [],
-	"searchDelay": 5,
+	"requestDelay": 5,
 	"pokemon_list": []
 }
