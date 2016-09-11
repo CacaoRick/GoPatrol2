@@ -14,7 +14,7 @@ function createWindow() {
 	});
 
 	// 讀取 index.html
-	win.loadURL(`file://${__dirname}/src/index.html`);
+	win.loadURL(`file://${__dirname}/app/index.html`);
 
 	// 開啟 DevTool
 	win.webContents.openDevTools();
