@@ -1,7 +1,6 @@
 const jQuery = $ = require('jquery');
 const bootstrap = require('bootstrap');
 const {ipcRenderer} = require('electron');
-require('./header.js');
 
 let defaultConfig = require('./default.json');
 var config = null;
@@ -10,3 +9,13 @@ try {
 } catch(e) {
 	console.log("找不到 config.json，載入預設值");
 }
+
+$(() => {
+	$('#header').load('header.html');
+
+	if (config == null) {
+		$('#main').load('setting-general.html');
+	} else {
+		$('#main').load('map.html');
+	}
+});
