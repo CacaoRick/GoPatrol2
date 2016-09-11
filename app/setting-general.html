@@ -6,7 +6,7 @@
 			<button class="btn btn-warning" id="reload" style="width: 120px">重新讀取</button>
 			<button class="btn btn-danger" id="reset" style="width: 120px">還原預設值</button>
 		</div>
-		<h1>一般設定</h1>
+		<h2>一般設定</h2>
 	</div>
 
 	<div><!-- googleMapsAPIKey -->
@@ -121,7 +121,7 @@
 		<label for="messageDelay" class="control-label">通知間延遲（豪秒）</label>
 		<input type="number" class="form-control" id="messageDelay" placeholder="200">
 		<span id="helpBlock" class="help-block">
-			若同時找到多隻 Pokemon 時，在通知之間加入多少豪秒的延遲，避免訊息交錯
+			若同時找到多隻 Pokemon 時，在每次通知間延遲多少豪秒，避免訊息同時送出造成順序錯亂
 		</span>
 	</div>
 	<br>
@@ -223,19 +223,23 @@
 			</div>
 		</div>
 	</div>
-
+	<br>
 	<div><!-- admins -->
 		
 	</div>
-
+	<br>
 	<div><!-- channels -->
 
 	</div>
-
+	<br>
 	<div><!-- searchDelay -->
-
+		<label for="searchDelay" class="control-label">請求延遲（豪秒）</label>
+		<input type="number" class="form-control" id="searchDelay" placeholder="5000" min="5000">
+		<span id="helpBlock" class="help-block">
+			每次與伺服器請求之間要間格多久（巡邏間格），最少為 5000 豪秒
+		</span>
 	</div>
-
+	<br>
 	<div><!-- pokemon_list -->
 
 	</div>
