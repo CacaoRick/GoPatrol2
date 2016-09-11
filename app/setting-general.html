@@ -9,76 +9,104 @@
 		<h1>一般設定</h1>
 	</div>
 
-	<!--Google Map API Key-->
+	<!-- Google Maps API Key -->
 	<div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
-		<label for="googleMapAPIKey" class="control-label">Google Map API Key</label>
-		<button class="btn btn-default btn-xs" type="button" data-toggle="collapse" data-target="#map-api-help" aria-expanded="false" aria-controls="map-api-help">
+		<label for="googleMapsAPIKey" class="control-label">Google Maps API Key</label>
+		<button class="btn btn-default btn-xs" type="button" data-toggle="modal" data-target="#gMapHelp">
 			申請說明
 		</button>
-		<input type="text" class="form-control" id="googleMapAPIKey" placeholder="請將 API Key 貼入此欄位">
+		<input type="text" class="form-control" id="googleMapsAPIKey" placeholder="請將 API Key 貼入此欄位">
 		<span id="helpBlock" class="help-block">
-			用來使用 Google 的地理編碼服務（座標轉地址）和 Google Map API，設定後每日可使用 2500 次地理編碼與 25000 次讀取地圖
+			用來使用 Google 的地理編碼服務（座標轉地址）和 Google Maps API，設定後每日可使用 2500 次地理編碼與 25000 次讀取地圖
 		</span>
-		<div class="collapse" id="map-api-help">
-			<div class="well">
-				<ol>
-					<li>前往 <a href="https://console.developers.google.com/">Google APIs</a></li>
-					<li>若第一次使用，需同意遵守服務條款，並把彈出的新手教學按一按</li>
-					<li>在左邊 API 管理員選單中選擇「憑證」<br>
-						<img src="assets/tutorial/map-api-1.png" alt="">
-					</li>
-					<li>若從未建立過專案會直接跳出視窗請按下「建立專案」。若已有專案可使用上方專案選單來建立專案或直接「建立憑證」<br>
-						<img src="assets/tutorial/map-api-2.png" alt="">
-					</li>
-					<li>填入你想要的專案名稱、選擇是否接收電子郵件、是否同意條款，完成後按下「建立」<br>
-						<img src="assets/tutorial/map-api-3.png" alt="">
-					</li>
-					<li>等他轉完圈圈，出現 API 憑證視窗，按下「建立憑證」下拉選單，選擇「API 金鑰」<br>
-						<img src="assets/tutorial/map-api-4.png" alt="">
-					</li>
-					<li>待彈出「已建立 API 金鑰」視窗後，將您的 API 金鑰複製起來，貼到本欄位中<br>
-						<img src="assets/tutorial/map-api-5.png" alt="">
-					</li>
-				</ol>
+		<!-- Modal -->
+		<div class="modal fade" id="gMapHelp" tabindex="-1" role="dialog" aria-labelledby="gMapHelpLabel">
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+        				<h4 class="modal-title" id="gMapHelpLabel">Google Maps API Key 申請說明</h4>
+					</div>
+					<div class="modal-body">
+						<ol>
+							<li>前往 <a href="https://console.developers.google.com/">Google APIs</a></li>
+							<li>若第一次使用，需同意遵守服務條款，並把彈出的新手教學按一按</li>
+							<li>在左邊 API 管理員選單中選擇「憑證」<br>
+								<img src="assets/tutorial/map-api-1.png" alt="">
+							</li>
+							<li>若從未建立過專案會直接跳出視窗請按下「建立專案」。若已有專案可使用上方專案選單來建立專案或直接「建立憑證」<br>
+								<img src="assets/tutorial/map-api-2.png" alt="">
+							</li>
+							<li>填入你想要的專案名稱、選擇是否接收電子郵件、是否同意條款，完成後按下「建立」<br>
+								<img src="assets/tutorial/map-api-3.png" alt="">
+							</li>
+							<li>等他轉完圈圈，出現 API 憑證視窗，按下「建立憑證」下拉選單，選擇「API 金鑰」<br>
+								<img src="assets/tutorial/map-api-4.png" alt="">
+							</li>
+							<li>待彈出「已建立 API 金鑰」視窗後，將您的 API 金鑰複製起來，貼到本欄位中<br>
+								<img src="assets/tutorial/map-api-5.png" alt="">
+							</li>
+						</ol>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-default" data-dismiss="modal">關閉</button>
+					</div>
+				</div>
 			</div>
 		</div>
 	</div>
 	<br>
-	<!--Telegram Bot Token-->
+	<!-- Telegram Bot Token -->
 	<div>
 		<label for="telegramBotToken" class="control-label">Telegram Bot Token</label>
-		<button class="btn btn-default btn-xs" type="button" data-toggle="collapse" data-target="#bot-token-help" aria-expanded="false" aria-controls="bot-token-help">
+		<button class="btn btn-default btn-xs" type="button" data-toggle="modal" data-target="#botTokenHelp">
 			申請說明
 		</button>
 		<input type="text" class="form-control" id="telegramBotToken" placeholder="請將 Token 貼入此欄位">
 		<span id="helpBlock" class="help-block">
 			在 Telegram 中找 <a href="https://telegram.me/BotFather">@BotFather</a> 建立機器人並取得 Bot Token，讓程式能使用擁有該 Token 的 Telegram Bot 傳送訊息
 		</span>
-		<div class="collapse" id="bot-token-help">
-			<div class="well">
-				<ol>
-					<li>在 Telegram 中搜尋 <a href="https://telegram.me/BotFather">@BotFather</a>，點他一下即可開啟對話<br>
-						<img src="assets/tutorial/bot-token-1.png" alt="">
-					</li>
-					<li>按下底部的 Start<br>
-						<img src="assets/tutorial/bot-token-2.png" alt="">
-					</li>
-					<li>BotFather 會自動顯示說明，按下說明中的 /newbot，或直接輸入 /newbot 傳送訊息<br>
-						<img src="assets/tutorial/bot-token-3.png" alt="">
-					</li>
-					<li>BotFather 會說 Alright, a new bot. How are we going to call it?... 這時輸入機器人名稱並傳送訊息<br>
-						<img src="assets/tutorial/bot-token-4.png" alt="">
-					</li>
-					<li>名稱設定好後，BotFather 會說 Good. Now let's choose a username... 這時要輸入機器人的使用者名稱，須為英文、符號僅能使用底線並且以 bot 做結尾，例如 TetrisBot 或 tetris_bot，輸入完後送出訊息<br>
-						<img src="assets/tutorial/bot-token-5.png" alt="">
-					</li>
-					<li>若成功會出現 Done! 開頭的訊息，並且在訊息中可以找到 token，將 token 複製並貼到本欄位中。若未出現 Done! 與 token 表示 Bot 使用者名稱重複或名稱未符合規範需再重新輸入<br>
-						<img src="assets/tutorial/bot-token-6.png" alt="">
-					</li>
-					<li>另外別忘了將你的機器人啟動，按下成功訊息中的連結（telegram.me/你的Bot使用者名稱）可開啟與機器人的對話，按下對話底部的 Start 即可啟動<br>
-						<img src="assets/tutorial/bot-token-7.png" alt="">
-					</li>
-				</ol>
+		<!-- Modal -->
+		<div class="modal fade" id="botTokenHelp" tabindex="-1" role="dialog" aria-labelledby="botTokenHelpLabel">
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+        				<h4 class="modal-title" id="botTokenHelpLabel">Google Maps API Key 申請說明</h4>
+					</div>
+					<div class="modal-body">
+						<ol>
+							<li>在 Telegram 中搜尋 <a href="https://telegram.me/BotFather">@BotFather</a>，點他一下即可開啟對話<br>
+								<img src="assets/tutorial/bot-token-1.png" alt="">
+							</li>
+							<li>按下底部的 Start<br>
+								<img src="assets/tutorial/bot-token-2.png" alt="">
+							</li>
+							<li>BotFather 會自動顯示說明，按下說明中的 /newbot，或直接輸入 /newbot 傳送訊息<br>
+								<img src="assets/tutorial/bot-token-3.png" alt="">
+							</li>
+							<li>BotFather 會說 Alright, a new bot. How are we going to call it?... 這時輸入機器人名稱並傳送訊息<br>
+								<img src="assets/tutorial/bot-token-4.png" alt="">
+							</li>
+							<li>名稱設定好後，BotFather 會說 Good. Now let's choose a username... 這時要輸入機器人的使用者名稱，須為英文、符號僅能使用底線並且以 bot 做結尾，例如 TetrisBot 或 tetris_bot，輸入完後送出訊息<br>
+								<img src="assets/tutorial/bot-token-5.png" alt="">
+							</li>
+							<li>若成功會出現 Done! 開頭的訊息，並且在訊息中可以找到 token，將 token 複製並貼到本欄位中。若未出現 Done! 與 token 表示 Bot 使用者名稱重複或名稱未符合規範需再重新輸入<br>
+								<img src="assets/tutorial/bot-token-6.png" alt="">
+							</li>
+							<li>另外別忘了將你的機器人啟動，按下成功訊息中的連結（telegram.me/你的Bot使用者名稱）可開啟與機器人的對話，按下對話底部的 Start 即可啟動<br>
+								<img src="assets/tutorial/bot-token-7.png" alt="">
+							</li>
+						</ol>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-default" data-dismiss="modal">關閉</button>
+					</div>
+				</div>
 			</div>
 		</div>
 	</div>
