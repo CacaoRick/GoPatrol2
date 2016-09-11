@@ -10,15 +10,15 @@
 	</div>
 
 	<!--Google Map API Key-->
-	<div>
+	<div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
 		<label for="googleMapAPIKey" class="control-label">Google Map API Key</label>
+		<button class="btn btn-default btn-xs" type="button" data-toggle="collapse" data-target="#map-api-help" aria-expanded="false" aria-controls="map-api-help">
+			申請說明
+		</button>
 		<input type="text" class="form-control" id="googleMapAPIKey" placeholder="請將 API Key 貼入此欄位">
 		<span id="helpBlock" class="help-block">
 			用來使用 Google 的地理編碼服務（座標轉地址）和 Google Map API，設定後每日可使用 2500 次地理編碼與 25000 次讀取地圖
 		</span>
-		<button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#map-api-help" aria-expanded="false" aria-controls="map-api-help">
-			申請說明
-		</button>
 		<div class="collapse" id="map-api-help">
 			<div class="well">
 				<ol>
@@ -47,13 +47,13 @@
 	<!--Telegram Bot Token-->
 	<div>
 		<label for="telegramBotToken" class="control-label">Telegram Bot Token</label>
+		<button class="btn btn-default btn-xs" type="button" data-toggle="collapse" data-target="#bot-token-help" aria-expanded="false" aria-controls="bot-token-help">
+			申請說明
+		</button>
 		<input type="text" class="form-control" id="telegramBotToken" placeholder="請將 Token 貼入此欄位">
 		<span id="helpBlock" class="help-block">
 			在 Telegram 中找 <a href="https://telegram.me/BotFather">@BotFather</a> 建立機器人並取得 Bot Token，讓程式能使用擁有該 Token 的 Telegram Bot 傳送訊息
 		</span>
-		<button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#bot-token-help" aria-expanded="false" aria-controls="bot-token-help">
-			機器人建立說明
-		</button>
 		<div class="collapse" id="bot-token-help">
 			<div class="well">
 				<ol>
