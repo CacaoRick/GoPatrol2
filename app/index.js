@@ -18,3 +18,7 @@ $(() => {
 		$("#main").load("map.html");
 	}
 });
+
+function openLink(url) {
+	ipcRenderer.send('open-link', url);
+}
