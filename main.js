@@ -7,6 +7,8 @@ let win;
 function createWindow() {
 	// 建立瀏覽器視窗
 	win = new BrowserWindow({
+		"width": 1024,
+		"height": 768,
 		'minWidth': 1024,
 		'minHeight': 768
 	});
