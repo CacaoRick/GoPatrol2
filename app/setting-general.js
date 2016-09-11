@@ -1,7 +1,6 @@
 let admins = [];
 let channels = [];
-let usernameReg = /^[a-zA-Z@][a-zA-Z0-9_]{3,28}[a-zA-Z0-9]$/;
-let channelIdReg = /^[a-zA-Z@][a-zA-Z0-9_]{3,29}[a-zA-Z0-9]$/;
+let regexp = /^[a-zA-Z@][a-zA-Z0-9_]{3,29}[a-zA-Z0-9]$/;
 $(() => {
 	// 加入新管理員 By Enter
 	$("input#admin-input").keypress(e => {
@@ -32,7 +31,7 @@ $(() => {
 function addAdmin() {
 	let admin = $("input#admin-input").val();
 	if (admin != "") {
-		if (channelIdReg.test(admin)) {
+		if (regexp.test(admin)) {
 			if (admins.indexOf(admin) < 0) {
 				$("input#admin-input").val("");
 				admins.push(admin);
@@ -61,7 +60,7 @@ function removeAdmin(span) {
 function addChannel() {
 	let channel = $("input#channel-input").val();
 	if (channel != "") {
-		if (channelIdReg.test(channel)) {
+		if (regexp.test(channel)) {
 			if (channels.indexOf(channel) < 0) {
 				$("input#channel-input").val("");
 				channels.push(channel);
