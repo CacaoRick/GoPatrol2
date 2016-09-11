@@ -110,13 +110,6 @@
 		</div>
 	</div>
 	<br>
-	<div><!-- enableCommand -->
-		<label for="enableCommand" class="control-label"><input id="enableCommand" type="checkbox">允許接收指令</label>
-		<span id="helpBlock" class="help-block">
-			允許 Telegram 機器人接收聊天指令以控制本程式，例如 /run /stop ...等
-		</span>
-	</div>
-	<br>
 	<div><!-- messageDelay -->
 		<label for="messageDelay" class="control-label">通知間延遲（豪秒）</label>
 		<input type="number" class="form-control" id="messageDelay" placeholder="200">
@@ -224,12 +217,39 @@
 		</div>
 	</div>
 	<br>
+	<div><!-- enableCommand -->
+		<label for="enableCommand" class="control-label"><input id="enableCommand" type="checkbox">允許接收指令</label>
+		<span id="helpBlock" class="help-block">
+			允許 Telegram 機器人接收聊天指令以控制本程式，例如 /run /stop /getmap...等
+		</span>
+	</div>
+	<br>
 	<div><!-- admins -->
-		
+		<label for="admin-input" class="control-label">管理員 Telegram 使用者名稱</label><br>
+		<p id="admins"></p>
+		<div class="form-inline form-group">
+			<input type="text" class="form-control" id="admin-input"/>
+			<button id="add-admin" class="btn btn-primary" type="button" data-toggle="modal">
+				加入
+			</button>
+		</div>
+		<span id="helpBlock" class="help-block">
+			輸入完畢後請按下加入 Enter 或加入。可輸入多個管理員
+		</span>
 	</div>
 	<br>
 	<div><!-- channels -->
-
+		<label for="channel-input" class="control-label">接收通知的頻道ID</label><br>
+		<p id="channels"></p>
+		<div class="form-inline form-group">
+			<input type="text" class="form-control" id="channel-input"/>
+			<button id="add-channel" class="btn btn-primary" type="button" data-toggle="modal">
+				加入
+			</button>
+		</div>
+		<span id="helpBlock" class="help-block">
+			輸入完畢後請按下 Enter 或加入。可輸入多個頻道ID
+		</span>
 	</div>
 	<br>
 	<div><!-- requestDelay -->
