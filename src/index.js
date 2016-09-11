@@ -1,8 +1,8 @@
-const jQuery = $ = require('jquery');
-const bootstrap = require('bootstrap');
-const {ipcRenderer} = require('electron');
+const jQuery = $ = require("jquery");
+const bootstrap = require("bootstrap");
+const {ipcRenderer} = require("electron");
 
-let defaultConfig = require('./default.json');
+let defaultConfig = require("./default.json");
 var config = null;
 try {
 	config = require("./config.json");
@@ -11,11 +11,11 @@ try {
 }
 
 $(() => {
-	$('#header').load('header.html');
+	$("#header").load("header.html");
 
 	if (config == null) {
-		$('#main').load('setting-general.html');
+		$("#main").load("setting-general.html");
 	} else {
-		$('#main').load('map.html');
+		$("#main").load("map.html");
 	}
 });
