@@ -9,8 +9,7 @@
 		<h1>一般設定</h1>
 	</div>
 
-	<!-- Google Maps API Key -->
-	<div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+	<div><!-- googleMapsAPIKey -->
 		<label for="googleMapsAPIKey" class="control-label">Google Maps API Key</label>
 		<button class="btn btn-default btn-xs" type="button" data-toggle="modal" data-target="#gMapHelp">
 			申請說明
@@ -58,8 +57,7 @@
 		</div>
 	</div>
 	<br>
-	<!-- Telegram Bot Token -->
-	<div>
+	<div><!-- telegramBotToken -->
 		<label for="telegramBotToken" class="control-label">Telegram Bot Token</label>
 		<button class="btn btn-default btn-xs" type="button" data-toggle="modal" data-target="#botTokenHelp">
 			申請說明
@@ -76,7 +74,7 @@
 						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 							<span aria-hidden="true">&times;</span>
 						</button>
-        				<h4 class="modal-title" id="botTokenHelpLabel">Google Maps API Key 申請說明</h4>
+        				<h4 class="modal-title" id="botTokenHelpLabel">Telegram Bot 建立說明</h4>
 					</div>
 					<div class="modal-body">
 						<ol>
@@ -111,4 +109,135 @@
 			</div>
 		</div>
 	</div>
+	<br>
+	<div><!-- enableCommand -->
+		<label for="enableCommand" class="control-label"><input id="enableCommand" type="checkbox">允許接收指令</label>
+		<span id="helpBlock" class="help-block">
+			允許 Telegram 機器人接收聊天指令以控制本程式，例如 /run /stop ...等
+		</span>
+	</div>
+	<br>
+	<div><!-- messageDelay -->
+		<label for="messageDelay" class="control-label">通知間延遲（豪秒）</label>
+		<input type="number" class="form-control" id="messageDelay" placeholder="200">
+		<span id="helpBlock" class="help-block">
+			若同時找到多隻 Pokemon 時，在通知之間加入多少豪秒的延遲，避免訊息交錯
+		</span>
+	</div>
+	<br>
+	<div><!-- sendVenue -->
+		<label for="sendVenue" class="control-label"><input id="sendVenue" type="checkbox">精簡通知</label>
+		<button class="btn btn-default btn-xs" type="button" data-toggle="modal" data-target="#sendVenueDemo">
+			範例
+		</button>
+		<span id="helpBlock" class="help-block">
+			啟動精簡通知時，不傳送帖圖並把 Pokemon 資訊與位置合併為單一訊息
+		</span>
+		<!-- Modal -->
+		<div class="modal fade" id="sendVenueDemo" tabindex="-1" role="dialog" aria-labelledby="sendVenueDemoLabel">
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+        				<h4 class="modal-title" id="sendVenueDemoLabel">精簡通知範例</h4>
+					</div>
+					<div class="modal-body">
+						<h5>精簡通知</h5>
+
+						<h5>一般通知</h5>
+
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-default" data-dismiss="modal">關閉</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<br>
+	<div><!-- showDistance -->
+		<label for="showDistance" class="control-label"><input id="showDistance" type="checkbox">顯示距離</label>
+		<button class="btn btn-default btn-xs" type="button" data-toggle="modal" data-target="#showDistanceDemo">
+			範例
+		</button>
+		<span id="helpBlock" class="help-block">
+			是否在通知中顯示距離
+		</span>
+		<!-- Modal -->
+		<div class="modal fade" id="showDistanceDemo" tabindex="-1" role="dialog" aria-labelledby="showDistanceDemoLabel">
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+        				<h4 class="modal-title" id="showDistanceDemoLabel">顯示距離範例</h4>
+					</div>
+					<div class="modal-body">
+						<h5>顯示距離</h5>
+
+						<h5>不顯示距離</h5>
+
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-default" data-dismiss="modal">關閉</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<br>
+	<div><!-- distanceLocation -->
+		<label for="useDistanceLocation" class="control-label"><input id="useDistanceLocation" type="checkbox">以所在位置計算距離</label>
+		<div class="form-inline form-group">
+			<button class="btn btn-primary" type="button" data-toggle="modal" data-target="#selectLocation">
+				選擇位置
+			</button>
+			<label for="distanceLocation.latitude">緯度</label>
+			<input type="number" class="form-control" id="distanceLocation.latitude" placeholder="">
+			<label for="distanceLocation.longitude">經度</label>
+			<input type="number" class="form-control" id="distanceLocation.longitude" placeholder="">
+		</div>
+		<span id="helpBlock" class="help-block">
+			若勾選此項目，將用此座標來計算顯示於 Pokemon 通知中的距離，否則將自動使用巡邏中心來計算距離（若無巡邏中心且未設定此項目則不顯示）
+		</span>
+		<!-- Modal -->
+		<div class="modal fade" id="selectLocation" tabindex="-1" role="dialog" aria-labelledby="selectLocationLabel">
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+        				<h4 class="modal-title" id="selectLocationLabel">選擇所在位置</h4>
+					</div>
+					<div class="modal-body">
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-primary" data-dismiss="modal">選擇</button>
+						<button type="button" class="btn btn-default" data-dismiss="modal">關閉</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div><!-- admins -->
+		
+	</div>
+
+	<div><!-- channels -->
+
+	</div>
+
+	<div><!-- searchDelay -->
+
+	</div>
+
+	<div><!-- pokemon_list -->
+
+	</div>
+
 </div>
