@@ -13,5 +13,6 @@
 	"admins": [],
 	"channels": [],
 	"requestDelay": 5,
+	"pokemon_name": 0,
 	"pokemon_list": []
 }
