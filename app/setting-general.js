@@ -29,6 +29,43 @@ $(() => {
 	$("button#add-channel").click(() => {
 		addChannel();
 	});
+
+	$("input.inform.hidden").click(event => {
+		let id = $(event.currentTarget).attr("id");
+		if ($(event.currentTarget).parent().hasClass("btn-default")) {
+			$(event.currentTarget).parent().removeClass("btn-default");
+			$(event.currentTarget).parent().addClass("btn-primary");
+			$(`.subOption.${id}`).removeClass("disabled");
+		} else {
+			$(event.currentTarget).parent().removeClass("btn-primary");
+			$(event.currentTarget).parent().addClass("btn-default");
+			$(`.subOption.${id}`).addClass("disabled");
+		}
+	});
+
+	$("input.sticker.hidden").click(event => {
+		if (!$(event.currentTarget).parent().hasClass("disabled")) {
+			if ($(event.currentTarget).parent().hasClass("btn-default")) {
+				$(event.currentTarget).parent().removeClass("btn-default");
+				$(event.currentTarget).parent().addClass("btn-info");
+			} else {
+				$(event.currentTarget).parent().removeClass("btn-info");
+				$(event.currentTarget).parent().addClass("btn-default");
+			}
+		}
+	});
+
+	$("input.checkProperty.hidden").click(event => {
+		if (!$(event.currentTarget).parent().hasClass("disabled")) {
+			if ($(event.currentTarget).parent().hasClass("btn-default")) {
+				$(event.currentTarget).parent().removeClass("btn-default");
+				$(event.currentTarget).parent().addClass("btn-warning");
+			} else {
+				$(event.currentTarget).parent().removeClass("btn-warning");
+				$(event.currentTarget).parent().addClass("btn-default");
+			}
+		}
+	});
 });
 
 // 新增管理員
@@ -90,12 +127,13 @@ function removeChannel(span) {
 
 function createPokemonTbody() {
 	for (var i = 1; i <= 151; i++) {
-		let id = `<div class="caption"><h4>#${i}</h4></div>`;
-		let img = `<img src="assets/pokemon-3d/${i}.png" style="width: 96px; height: 96px; object-fit: contain">`;
-		let imform = `<label class="btn btn-primary"><input id="${i}" class="hidden" type="checkbox" data-toggle="buttons">通知</label>`;
-		let sticker = `<label class="btn btn-info"><input id="${i}" class="hidden" type="checkbox" data-toggle="buttons">帖圖</label>`;
-		let checkProperty = `<label class="btn btn-warning"><input id="${i}" class="hidden" type="checkbox" data-toggle="buttons">屬性</label>`;
-		let ivFilter = `<p class="text-center"><label class="control-label">IV篩選≧<input id="${i}" class="text-center" type="number" min="0" max="100" value="0"></label></p>`;
-		$("#pokemon_list").append(`<div #="${i}" class=" thumbnail col-md-2">${id}${img}<br>${imform}${sticker}${checkProperty}${ivFilter}</div>`);	
+		let id = `<p><h4>#${i}</h4></p>`;
+		let name = `<p>name</p>`;
+		let img = `<p><img src="assets/pokemon-3d/${i}.png" style="width: 96px; height: 96px; object-fit: contain;"></p>`;
+		let inform = `<p><label class="btn btn-default inform" style="width: 120px"><input id="${i}" class="inform hidden" type="checkbox" data-toggle="buttons">傳送通知</label></p>`;
+		let sticker = `<p><label class="btn btn-default sticker subOption ${i}" style="width: 120px"><input id="${i}" class="sticker hidden" type="checkbox" data-toggle="buttons">傳送帖圖</label></p>`;
+		let checkProperty = `<p><label class="btn btn-default checkProperty subOption ${i}" style="width: 120px"><input id="${i}" class="checkProperty hidden" type="checkbox" data-toggle="buttons">查詢IV與招式</label></p>`;
+		let ivFilter = `<p class="text-center"><label class="control-label">IV篩選≧<input id="${i}" class="text-center subOption ${i}" type="number" min="0" max="100" value="0"></label></p>`;
+		$("#pokemon_list").append(`<div #="${i}" class="panel panel-default col-md-4"><div class="col-md-5 text-center">${id}${name}${img}</div><div class="col-md-7 text-center"><br>${inform}${sticker}${checkProperty}${ivFilter}</div></div>`);	
 	}
 }
