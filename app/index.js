@@ -1,5 +1,6 @@
 const jQuery = $ = require("jquery");
 const bootstrap = require("bootstrap");
+const bootstrapTable = require("bootstrap-table");
 const {ipcRenderer} = require("electron");
 
 var config = null;
