@@ -3,7 +3,7 @@ let channels = [];
 let regexp = /^[a-zA-Z@][a-zA-Z0-9_]{3,29}[a-zA-Z0-9]$/;
 $(() => {
 
-	// 產生 Pokemon List
+	// 建立 151 隻 Pokemon 的選項清單
 	createPokemonTbody();
 
 	// 加入新管理員 By Enter
@@ -30,39 +30,54 @@ $(() => {
 		addChannel();
 	});
 
+	// 處理 Pokemon list 的通知開關
 	$("input.inform.hidden").click(event => {
+		// 先取出 id 備用，要用來選擇各個按鈕和 ivFilter
 		let id = $(event.currentTarget).attr("id");
 		if ($(event.currentTarget).parent().hasClass("btn-default")) {
+			// 原本是 btn-default off 狀態，改為 btn-primary on 狀態
 			$(event.currentTarget).parent().removeClass("btn-default");
 			$(event.currentTarget).parent().addClass("btn-primary");
+			// 將其他按鈕取消 disable
 			$(`.subOption.${id}`).removeClass("disabled");
+			// ivFilter 設為 disable false
 			$(`.ivFilter.${id}`).prop("disabled", false);
 		} else {
+			// 原本是 btn-primary on 狀態，改為 btn-default off 狀態
 			$(event.currentTarget).parent().removeClass("btn-primary");
 			$(event.currentTarget).parent().addClass("btn-default");
+			// 將其他按鈕設為 disable
 			$(`.subOption.${id}`).addClass("disabled");
+			// ivFilter 設為 disable true
 			$(`.ivFilter.${id}`).prop("disabled", true);
 		}
 	});
 
+	// 處理 Pokemon list 的貼圖開關
 	$("input.sticker.hidden").click(event => {
 		if (!$(event.currentTarget).parent().hasClass("disabled")) {
 			if ($(event.currentTarget).parent().hasClass("btn-default")) {
+				// 原本是 btn-default off 狀態，改為 btn-info on 狀態
 				$(event.currentTarget).parent().removeClass("btn-default");
 				$(event.currentTarget).parent().addClass("btn-info");
 			} else {
+				// 原本是 btn-info on 狀態，改為 btn-default off 狀態
 				$(event.currentTarget).parent().removeClass("btn-info");
 				$(event.currentTarget).parent().addClass("btn-default");
 			}
 		}
 	});
 
+	// 處理 Pokemon list 的查IV開關
 	$("input.checkProperty.hidden").click(event => {
+		// disabled 的話不理他
 		if (!$(event.currentTarget).parent().hasClass("disabled")) {
 			if ($(event.currentTarget).parent().hasClass("btn-default")) {
+				// 原本是 btn-default off 狀態，改為 btn-warning on 狀態
 				$(event.currentTarget).parent().removeClass("btn-default");
 				$(event.currentTarget).parent().addClass("btn-warning");
 			} else {
+				// 原本是 btn-warning on 狀態，改為 btn-default off 狀態
 				$(event.currentTarget).parent().removeClass("btn-warning");
 				$(event.currentTarget).parent().addClass("btn-default");
 			}
@@ -72,12 +87,19 @@ $(() => {
 
 // 新增管理員
 function addAdmin() {
+	// 取出要新增的管理員使用者名稱
 	let admin = $("input#admin-input").val();
+	// 判斷是否為空字串
 	if (admin != "") {
+		// 根據 Telegram 的規則確認格式是否正確
 		if (regexp.test(admin)) {
+			// 格式正確，確認是否已新增過
 			if (admins.indexOf(admin) < 0) {
+				// 沒新增過，將 html input 框框中的字刪除
 				$("input#admin-input").val("");
+				// 將 admin 新增進 admins
 				admins.push(admin);
+				// 讓 html 顯示出新增的 admin
 				$("#admins").append(
 					"<span username=" + admin + " class='tag label label-info'><span>" + admin + " "
 					+ "</span><span onclick='removeAdmin(this);' class='glyphicon glyphicon-remove glyphicon-white'></span></span> "
@@ -94,19 +116,29 @@ function addAdmin() {
 
 // 刪除管理員
 function removeAdmin(span) {
+	// 找出目前要刪除的管理員在 admins 中的 index
 	let index = admins.indexOf($(span).parent().attr("username"));
+	// 從 admins 中刪除
 	admins.splice(index, 1);
+	// 從 html 畫面中刪除
 	$(span).parent().remove();
 }
 
 // 新增頻道
 function addChannel() {
+	// 取出要新增的頻道ID
 	let channel = $("input#channel-input").val();
+	// 判斷是否為空字串
 	if (channel != "") {
+		// 根據 Telegram 的規則確認格式是否正確
 		if (regexp.test(channel)) {
+			// 格式正確，確認是否已新增過
 			if (channels.indexOf(channel) < 0) {
+				// 沒新增過，將 html input 框框中的字刪除
 				$("input#channel-input").val("");
+				// 將 channel 新增進 channels
 				channels.push(channel);
+				// 讓 html 顯示出新增的 channel
 				$("#channels").append(
 					"<span channelId=" + channel + " class='tag label label-info'><span>" + channel + " "
 					+ "</span><span onclick='removeChannel(this);' class='glyphicon glyphicon-remove glyphicon-white'></span></span> "
@@ -122,11 +154,15 @@ function addChannel() {
 
 // 刪除頻道
 function removeChannel(span) {
+	// 找出目前要刪除的頻道在 channels 中的 index
 	let index = channels.indexOf($(span).parent().attr("channelId"));
+	// 從 channels 中刪除
 	channels.splice(index, 1);
+	// 從 html 畫面中刪除
 	$(span).parent().remove();
 }
 
+// 建立 151 隻 Pokemon 的選項清單
 function createPokemonTbody() {
 	for (var i = 1; i <= 151; i++) {
 		let id = `<p><h4>#${i}</h4></p>`;
