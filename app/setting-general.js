@@ -6,9 +6,11 @@ $(() => {
 	// 建立 151 隻 Pokemon 的選項清單
 	createPokemonTbody();
 
-	// messageDelay 檢查
+	// messageDelay 檢查，小於 0 會改 0
 	$("input#messageDelay").focusout(event => {
-		console.log($(event.target));
+		if ($(event.target).val() < 0) {
+			$(event.target).val(0);
+		}
 	});
 
 
@@ -16,8 +18,8 @@ $(() => {
 
 
 	// 加入新管理員 By Enter
-	$("input#admin-input").keypress(e => {
-		if (e.which == 13) {
+	$("input#admin-input").keypress(evente => {
+		if (event.which == 13) {
 			addAdmin();
 		}
 	});
@@ -28,8 +30,8 @@ $(() => {
 	});
 
 	// 加入新頻道 By Enter
-	$("input#channel-input").keypress(e => {
-		if (e.which == 13) {
+	$("input#channel-input").keypress(event => {
+		if (event.which == 13) {
 			addChannel();
 		}
 	});
@@ -39,8 +41,13 @@ $(() => {
 		addChannel();
 	});
 
+	// 處理顯示距離相關的其他選項 disabled 狀態
+	$("input#showDistance").change(event => {
+		showDistanceChange(event.target);
+	});
+
 	// 處理 Pokemon list 的通知開關
-	$("input.inform.hidden").click(event => {
+	$("input.inform.hidden").change(event => {
 		// 先取出 id 備用，要用來選擇各個按鈕和 ivFilter
 		let id = $(event.target).attr("id");
 		if ($(event.target).parent().hasClass("btn-default")) {
@@ -63,7 +70,7 @@ $(() => {
 	});
 
 	// 處理 Pokemon list 的貼圖開關
-	$("input.sticker.hidden").click(event => {
+	$("input.sticker.hidden").change(event => {
 		if (!$(event.target).parent().hasClass("disabled")) {
 			if ($(event.target).parent().hasClass("btn-default")) {
 				// 原本是 btn-default off 狀態，改為 btn-info on 狀態
@@ -78,7 +85,7 @@ $(() => {
 	});
 
 	// 處理 Pokemon list 的查IV開關
-	$("input.checkProperty.hidden").click(event => {
+	$("input.checkProperty.hidden").change(event => {
 		// disabled 的話不理他
 		if (!$(event.target).parent().hasClass("disabled")) {
 			if ($(event.target).parent().hasClass("btn-default")) {
@@ -102,7 +109,9 @@ function addAdmin() {
 	if (admin != "") {
 		// 根據 Telegram 的規則確認格式是否正確
 		if (regexp.test(admin)) {
-			// 格式正確，確認是否已新增過
+			// 格式正確，移除錯誤狀態
+			$("input#admin-input").parent().parent().removeClass("has-error");
+			// 確認是否已新增過
 			if (admins.indexOf(admin) < 0) {
 				// 沒新增過，將 html input 框框中的字刪除
 				$("input#admin-input").val("");
@@ -118,7 +127,7 @@ function addAdmin() {
 			}
 		} else {
 			// 需為英文、數字或底線，但不可以底線作為開頭和結尾
-			console.log("需為英文、數字或底線，但不可以底線作為開頭和結尾");
+			$("input#admin-input").parent().parent().addClass("has-error");
 		}
 	}
 }
@@ -141,7 +150,9 @@ function addChannel() {
 	if (channel != "") {
 		// 根據 Telegram 的規則確認格式是否正確
 		if (regexp.test(channel)) {
-			// 格式正確，確認是否已新增過
+			// 格式正確，移除錯誤狀態
+			$("input#admin-input").parent().parent().removeClass("has-error");
+			// 確認是否已新增過
 			if (channels.indexOf(channel) < 0) {
 				// 沒新增過，將 html input 框框中的字刪除
 				$("input#channel-input").val("");
@@ -157,6 +168,7 @@ function addChannel() {
 			}
 		} else {
 			// 需為英文、數字或底線，但不可以底線作為開頭和結尾
+			$("input#admin-input").parent().parent().addClass("has-error");
 		}
 	}
 }
@@ -169,6 +181,21 @@ function removeChannel(span) {
 	channels.splice(index, 1);
 	// 從 html 畫面中刪除
 	$(span).parent().remove();
+}
+
+// 處理顯示距離相關的其他選項 disabled 狀態
+function showDistanceChange(checkbox) {
+	if ($(checkbox).is(":checked")) {
+		$("button.showDistanceSubOption").removeClass("disabled");
+		$("input.showDistanceSubOption").prop("disabled", false);
+	} else {
+		$("button.showDistanceSubOption").addClass("disabled");
+		$("input.showDistanceSubOption").prop("disabled", true);
+	}
+}
+
+function informChange(id) {
+
 }
 
 // 建立 151 隻 Pokemon 的選項清單
