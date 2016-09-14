@@ -36,10 +36,12 @@ $(() => {
 			$(event.currentTarget).parent().removeClass("btn-default");
 			$(event.currentTarget).parent().addClass("btn-primary");
 			$(`.subOption.${id}`).removeClass("disabled");
+			$(`.ivFilter.${id}`).prop("disabled", false);
 		} else {
 			$(event.currentTarget).parent().removeClass("btn-primary");
 			$(event.currentTarget).parent().addClass("btn-default");
 			$(`.subOption.${id}`).addClass("disabled");
+			$(`.ivFilter.${id}`).prop("disabled", true);
 		}
 	});
 
@@ -131,9 +133,9 @@ function createPokemonTbody() {
 		let name = `<p>name</p>`;
 		let img = `<p><img src="assets/pokemon-3d/${i}.png" style="width: 96px; height: 96px; object-fit: contain;"></p>`;
 		let inform = `<p><label class="btn btn-default inform" style="width: 120px"><input id="${i}" class="inform hidden" type="checkbox" data-toggle="buttons">傳送通知</label></p>`;
-		let sticker = `<p><label class="btn btn-default sticker subOption ${i}" style="width: 120px"><input id="${i}" class="sticker hidden" type="checkbox" data-toggle="buttons">傳送帖圖</label></p>`;
-		let checkProperty = `<p><label class="btn btn-default checkProperty subOption ${i}" style="width: 120px"><input id="${i}" class="checkProperty hidden" type="checkbox" data-toggle="buttons">查詢IV與招式</label></p>`;
-		let ivFilter = `<p class="text-center"><label class="control-label">IV篩選≧<input id="${i}" class="text-center subOption ${i}" type="number" min="0" max="100" value="0"></label></p>`;
+		let sticker = `<p><label class="btn btn-default disabled sticker subOption ${i}" style="width: 120px"><input id="${i}" class="sticker hidden" type="checkbox" data-toggle="buttons">傳送帖圖</label></p>`;
+		let checkProperty = `<p><label class="btn btn-default disabled checkProperty subOption ${i}" style="width: 120px"><input id="${i}" class="checkProperty hidden" type="checkbox" data-toggle="buttons">查詢IV與招式</label></p>`;
+		let ivFilter = `<form class="form-inline"><p><div class="form-group"><label class="control-label">IV篩選≧</label><input id="${i}" class="form-control text-center ivFilter ${i}" type="number" min="0" max="100" value="0" disabled></div></p></form>`;
 		$("#pokemon_list").append(`<div #="${i}" class="panel panel-default col-md-4"><div class="col-md-5 text-center">${id}${name}${img}</div><div class="col-md-7 text-center"><br>${inform}${sticker}${checkProperty}${ivFilter}</div></div>`);	
 	}
 }
