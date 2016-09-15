@@ -3,8 +3,29 @@ let channels = [];
 let regexp = /^[a-zA-Z@][a-zA-Z0-9_]{3,29}[a-zA-Z0-9]$/;
 $(() => {
 
+	
+
+	// 處理 showDistance 狀態
+	updateShowDistance();
+
+	// 處理 enableCommand 狀態
+	updateEnableCommand();
+
 	// 建立 151 隻 Pokemon 的選項清單
 	createPokemonTbody();
+
+	// 處理 inform 狀態
+	$("input.inform").each((index, element) => {
+		updateInform($(element).attr("id"));
+	});
+	// 處理 sticker 狀態
+	$("input.sticker").change((index, element) => {
+		updateSticker($(element).attr("id"));
+	});
+	// 處理 status 狀態
+	$("input.status").change((index, element) => {
+		updateStatus($(element).attr("id"));
+	});
 
 	// requestDelay 檢查，小於 5000 改 5000
 	$("input#requestDelay").focusout(event => {
@@ -49,30 +70,38 @@ $(() => {
 
 	// 處理顯示距離相關的其他選項 disabled 狀態
 	$("input#showDistance").change(() => {
-		showDistanceChange();
+		updateShowDistance();
 	});
 
 	// 處理允許接收指令相關的管理員選項 disabled 狀態
 	$("input#enableCommand").change(() => {
-		enableCommandChange();
+		updateEnableCommand();
 	});
 
+	// 註冊 Pokemon List 批次按鈕的 click 事件
+	$("button#inform-select-all").click(informSelectAll);
+	$("button#inform-clean-all").click(informCleanAll);
+	$("button#sticker-select-all").click(stickerSelectAll);
+	$("button#sticker-clean-all").click(stickerCleanAll);
+	$("button#status-select-all").click(statusSelectAll);
+	$("button#status-clean-all").click(statusCleanAll);
+
 	// 處理 Pokemon list 的通知開關
-	$("input.inform.hidden").change(event => {
+	$("input.inform").change(event => {
 		// 處理 inform 狀態
-		informChange(event.target);
+		updateInform($(event.target).attr("id"));
 	});
 
 	// 處理 Pokemon list 的貼圖開關
-	$("input.sticker.hidden").change(event => {
+	$("input.sticker").change(event => {
 		// 處理 sticker 狀態
-		stickerChange(event.target);
+		updateSticker($(event.target).attr("id"));
 	});
 
 	// 處理 Pokemon list 的查IV開關
-	$("input.checkProperty.hidden").change(event => {
-		// 處理 checkProperty 狀態
-		checkPropertyChange(event.target);
+	$("input.status").change(event => {
+		// 處理 status 狀態
+		updateStatus($(event.target).attr("id"));
 	});
 });
 
@@ -159,7 +188,7 @@ function removeChannel(span) {
 }
 
 // 處理顯示距離相關的其他選項 disabled 狀態
-function showDistanceChange() {
+function updateShowDistance() {
 	if ($("input#showDistance").is(":checked")) {
 		$("button.showDistanceSubOption").removeClass("disabled");
 		$("input.showDistanceSubOption").prop("disabled", false);
@@ -169,8 +198,56 @@ function showDistanceChange() {
 	}
 }
 
+// inform 全選
+function informSelectAll() {
+	$("input.inform").prop("checked", true);
+	$("input.inform").each((index, element) => {
+		updateInform($(element).attr("id"));
+	});
+}
+
+// inform 清除
+function informCleanAll() {
+	$("input.inform").prop("checked", false);
+	$("input.inform").each((index, element) => {
+		updateInform($(element).attr("id"));
+	});	
+}
+
+// sticker 全選
+function stickerSelectAll() {
+	$("input.sticker").prop("checked", true);
+	$("input.sticker").each((index, element) => {
+		updateSticker($(element).attr("id"));
+	});	
+}
+
+// sticker 清除
+function stickerCleanAll() {
+	$("input.sticker").prop("checked", false);
+	$("input.sticker").each((index, element) => {
+		updateSticker($(element).attr("id"));
+	});	
+}
+
+// Status 全選
+function statusSelectAll() {
+	$("input.status").prop("checked", true);
+	$("input.status").each((index, element) => {
+		updateStatus($(element).attr("id"));	
+	});
+}
+
+// Status 清除
+function statusCleanAll() {
+	$("input.status").prop("checked", false);
+	$("input.status").each((index, element) => {
+		updateStatus($(element).attr("id"));	
+	});
+}
+
 // 處理允許接收指令相關的管理員選項 disabled 狀態
-function enableCommandChange() {
+function updateEnableCommand() {
 	if ($("input#enableCommand").is(":checked")) {
 		$("button.enableCommandSubOption").removeClass("disabled");
 	} else {
@@ -178,53 +255,55 @@ function enableCommandChange() {
 	}
 }
 
-// 處理 inform checkbutton 狀態
-function informChange(checkbox) {
-	// 先取出 id 備用，要用來選擇各個按鈕和 ivFilter
-	let id = $(event.target).attr("id");
-	if ($(checkbox).parent().hasClass("btn-default")) {
-		// 原本是 btn-default off 狀態，改為 btn-primary on 狀態
-		$(checkbox).parent().removeClass("btn-default");
-		$(checkbox).parent().addClass("btn-primary");
-		// 將其他按鈕取消 disable
-		$(`.pokemonSubOption.${id}`).removeClass("disabled");
+// 根據 inform 狀態來更新其他選項的 disabled 狀態
+function updateInform(id) {
+	// 檢查 inform 是否有勾
+	if ($(`input#${id}.inform`).is(":checked")) {
+		// 有勾，顯示顏色按鈕
+		$(`input#${id}.inform`).parent().addClass("btn-primary");
+		// 更改子選項的可用狀態
+		// enable input
+		$(`input#${id}.informSubOption`).prop("disabled", false);
+		// enable lable
+		$(`input#${id}.informSubOption`).parent().removeClass("disabled");
 	} else {
-		// 原本是 btn-primary on 狀態，改為 btn-default off 狀態
-		$(checkbox).parent().removeClass("btn-primary");
-		$(ckeckbox).parent().addClass("btn-default");
-		// 將其他按鈕設為 disable
-		$(`.pokemonSubOption.${id}`).addClass("disabled");
+		// 沒勾，拿掉顏色按鈕
+		$(`input.inform#${id}`).parent().removeClass("btn-primary");
+		// 更改子選項的可用狀態
+		// disable input
+		$(`input#${id}.informSubOption`).prop("disabled", true);
+		// disable lable
+		$(`input#${id}.informSubOption`).parent().addClass("disabled");
+	}
+	// 根據 status 狀態來更新 ivFilter 的 disabled 狀態
+	updateStatus(id);
+}
+
+// 根據 sticker 狀態來更新
+function updateSticker(id) {
+	if ($(`input#${id}.sticker`).is(":checked")) {
+		// 有勾，顯示顏色按鈕
+		$(`input#${id}.sticker`).parent().addClass("btn-info");
+	} else {
+		// 沒勾，拿掉顏色按鈕
+		$(`input#${id}.sticker`).parent().removeClass("btn-info");
 	}
 }
 
-// 處理 sticker checkbutton 狀態
-function stickerChange(checkbox) {
-	if ($(checkbox).parent().hasClass("btn-default")) {
-		// 原本是 btn-default off 狀態，改為 btn-info on 狀態
-		$(checkbox).parent().removeClass("btn-default");
-		$(checkbox).parent().addClass("btn-info");
+// 根據 status 狀態來更新 ivFilter 的 disabled 狀態
+function updateStatus(id) {
+	if ($(`input#${id}.status`).is(":checked")) {
+		// 有勾，顯示顏色按鈕
+		$(`input#${id}.status`).parent().addClass("btn-warning");
+		if ($(`input#${id}.inform`).is(":checked")) {
+			// inform 也有勾，允許 ivFilter
+			$(`input#${id}.ivFilter`).prop("disabled", false);
+		}
 	} else {
-		// 原本是 btn-info on 狀態，改為 btn-default off 狀態
-		$(checkbox).parent().removeClass("btn-info");
-		$(checkbox).parent().addClass("btn-default");
-	}
-}
-
-// 處理 checkProperty checkbutton 狀態
-function checkPropertyChange(checkbox) {
-	let id = $(event.target).attr("id");
-	if ($(event.target).parent().hasClass("btn-default")) {
-		// 原本是 btn-default off 狀態，改為 btn-warning on 狀態
-		$(event.target).parent().removeClass("btn-default");
-		$(event.target).parent().addClass("btn-warning");
-		// ivFilter 設為 disable false
-		$(`.ivFilter.${id}`).prop("disabled", false);
-	} else {
-		// 原本是 btn-warning on 狀態，改為 btn-default off 狀態
-		$(event.target).parent().removeClass("btn-warning");
-		$(event.target).parent().addClass("btn-default");
-		// ivFilter 設為 disable true
-		$(`.ivFilter.${id}`).prop("disabled", true);
+		// 沒勾，拿掉顏色按鈕
+		$(`input#${id}.status`).parent().removeClass("btn-warning");
+		// 禁止 ivFilter
+		$(`input#${id}.ivFilter`).prop("disabled", true);
 	}
 }
 
@@ -234,10 +313,11 @@ function createPokemonTbody() {
 		let id = `<p><h4>#${i}</h4></p>`;
 		let name = `<p>name</p>`;
 		let img = `<p><img src="assets/pokemon-3d/${i}.png" style="width: 96px; height: 96px; object-fit: contain;"></p>`;
-		let inform = `<p><label class="btn btn-default inform" style="width: 120px"><input id="${i}" class="inform hidden" type="checkbox" data-toggle="buttons">傳送通知</label></p>`;
-		let sticker = `<p><label class="btn btn-default disabled sticker pokemonSubOption ${i}" style="width: 120px"><input id="${i}" class="sticker hidden" type="checkbox" data-toggle="buttons">傳送帖圖</label></p>`;
-		let checkProperty = `<p><label class="btn btn-default disabled checkProperty pokemonSubOption ${i}" style="width: 120px"><input id="${i}" class="checkProperty hidden" type="checkbox" data-toggle="buttons">查詢IV與招式</label></p>`;
-		let ivFilter = `<form class="form-inline"><p><div class="form-group"><label class="control-label">IV篩選≧</label><input id="${i}" class="form-control text-center ivFilter ${i}" type="number" onClick="this.select();" min="0" max="100" value="0" disabled></div></p></form>`;
-		$("#pokemon_list").append(`<div #="${i}" class="panel panel-default col-md-4"><div class="col-md-5 text-center">${id}${name}${img}</div><div class="col-md-7 text-center"><br>${inform}${sticker}${checkProperty}${ivFilter}</div></div>`);	
+		let inform = `<p><label class="btn btn-default" style="width: 120px"><input id="${i}" class="inform hidden" type="checkbox" data-toggle="buttons" onclick="this.blur();">傳送通知</label></p>`;
+		let sticker = `<p><label class="btn btn-default" style="width: 120px"><input id="${i}" class="sticker hidden informSubOption" type="checkbox" data-toggle="buttons" onclick="this.blur();">傳送帖圖</label></p>`;
+		let status = `<p><label class="btn btn-default" style="width: 120px"><input id="${i}" class="status hidden informSubOption" type="checkbox" data-toggle="buttons" onclick="this.blur();">查詢IV與招式</label></p>`;
+		let ivFilter = `<form class="form-inline"><p><div class="form-group"><label class="control-label">IV篩選≧</label><input id="${i}" class="ivFilter form-control text-center" type="number" onClick="this.select();" min="0" max="100" value="0"></div></p></form>`;
+		$("#pokemon_list").append(`<div #="${i}" class="panel panel-default col-md-4"><div class="col-md-5 text-center">${id}${name}${img}</div><div class="col-md-7 text-center"><br>${inform}${sticker}${status}${ivFilter}</div></div>`);	
 	}
 }
+

@@ -175,15 +175,15 @@
 	</div>
 	<br>
 	<div><!-- distanceLocation -->
-		<label for="useDistanceLocation" class="control-label"><input class="showDistanceSubOption" id="useDistanceLocation" type="checkbox" disabled>以所在位置計算距離</label>
+		<label for="useDistanceLocation" class="control-label"><input class="showDistanceSubOption" id="useDistanceLocation" type="checkbox">以所在位置計算距離</label>
 		<div class="form-inline form-group">
-			<button class="btn btn-primary showDistanceSubOption disabled" type="button" data-toggle="modal" data-target="#selectLocation">
+			<button class="btn btn-primary showDistanceSubOption" type="button" data-toggle="modal" data-target="#selectLocation">
 				選擇位置
 			</button>
 			<label for="distanceLocation.latitude">緯度</label>
-			<input type="number" class="form-control showDistanceSubOption" id="distanceLocation.latitude" placeholder="" onClick="this.select();" disabled>
+			<input type="number" class="form-control showDistanceSubOption" id="distanceLocation.latitude" placeholder="" onClick="this.select();">
 			<label for="distanceLocation.longitude">經度</label>
-			<input type="number" class="form-control showDistanceSubOption" id="distanceLocation.longitude" placeholder="" onClick="this.select();" disabled>
+			<input type="number" class="form-control showDistanceSubOption" id="distanceLocation.longitude" placeholder="" onClick="this.select();">
 		</div>
 		<span id="helpBlock" class="help-block">
 			若勾選此項目，將用此座標來計算顯示於 Pokemon 通知中的距離，否則將自動使用巡邏中心來計算距離（若無巡邏中心且未設定此項目則不顯示）
@@ -221,7 +221,7 @@
 		<p id="admins"></p>
 		<div class="form-inline form-group">
 			<input type="text" class="form-control" id="admin-input"/>
-			<button id="add-admin" class="btn btn-primary enableCommandSubOption disabled" type="button" data-toggle="modal">
+			<button id="add-admin" class="btn btn-primary enableCommandSubOption" type="button" data-toggle="modal">
 				加入
 			</button>
 		</div>
@@ -280,13 +280,17 @@
 			自訂每一種 Pokemon 的訊息要如何處理<br>
 			若啟動查詢IV與招式可能會增加帳號被BAN的風險
 		</span>
-		<p class="btn-group col-md-12" role="group">
-			<button class="btn btn-primary col-md-2" id="inform-selectall">全選 傳送通知</button>
-			<button class="btn btn-primary col-md-2" id="inform-clean">清除 傳送通知</button>
-			<button class="btn btn-info col-md-2" id="sticker-selectall">全選 傳送帖圖</button>
-			<button class="btn btn-info col-md-2" id="sticker-clean">清除 傳送帖圖</button>
-			<button class="btn btn-warning col-md-2" id="checkProperty-selectall">全選 查詢IV與招式</button>
-			<button class="btn btn-warning col-md-2" id="checkProperty-clean">清除 查詢IV與招式</button>
+		<p>
+			<form class="form-inline">
+				<div class="form-group">
+				<button class="btn btn-primary" id="inform-select-all" type="button"><span class="glyphicon glyphicon-ok" aria-hidden="true"></span> 傳送通知</button>
+				<button class="btn btn-primary" id="inform-clean-all" type="button"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span> 傳送通知</button>
+				<button class="btn btn-info" id="sticker-select-all" type="button"><span class="glyphicon glyphicon-ok" aria-hidden="true"></span> 傳送帖圖</button>
+				<button class="btn btn-info" id="sticker-clean-all" type="button"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span> 傳送帖圖</button>
+				<button class="btn btn-warning" id="status-select-all" type="button"><span class="glyphicon glyphicon-ok" aria-hidden="true"></span> 查詢IV與招式</button>
+				<button class="btn btn-warning" id="status-clean-all" type="button"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span> 查詢IV與招式</button>
+				</div>
+			</form>
 		</p>
 		<div id="pokemon_list" class="text-center"></div>
 	</div>
