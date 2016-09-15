@@ -2,6 +2,8 @@ let admins = [];
 let channels = [];
 let regexp = /^[a-zA-Z@][a-zA-Z0-9_]{3,29}[a-zA-Z0-9]$/;
 $(() => {
+	// 先讀設定檔
+	loadConfig();
 
 	// 註冊設定頁面三個按鈕
 	$("button#save").click(saveConfig);
@@ -334,7 +336,11 @@ function saveConfig() {
 
 // 讀取設定檔
 function loadConfig() {
-
+	if (configGeneral == null) {
+		resetConfig();
+	} else {
+		
+	}
 }
 
 // 讀取預設值
