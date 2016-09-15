@@ -1,5 +1,6 @@
 "use strict";
-const jQuery = $ = require("jquery");
+const jQuery = require("jquery");
+const $ = jQuery;
 const bootstrap = require("bootstrap");
 const {ipcRenderer} = require("electron");
 
