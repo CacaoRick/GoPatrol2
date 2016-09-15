@@ -339,14 +339,37 @@ function createPokemonTbody() {
 		let sticker = `<p><label class="btn btn-default" style="width: 120px"><input id="${i}" class="sticker hidden informSubOption" type="checkbox" data-toggle="buttons" onclick="this.blur();">傳送帖圖</label></p>`;
 		let status = `<p><label class="btn btn-default" style="width: 120px"><input id="${i}" class="status hidden informSubOption" type="checkbox" data-toggle="buttons" onclick="this.blur();">查詢IV與招式</label></p>`;
 		let ivFilter = `<form class="form-inline"><p><div class="form-group"><label class="control-label">IV篩選≧</label><input id="${i}" class="ivFilter form-control text-center" type="number" onClick="this.select();" min="0" max="100" value="0"></div></p></form>`;
-		$("#pokemon_list").append(`<div #="${i}" class="panel panel-default col-md-4"><div class="col-md-5 text-center">${id}${name}${img}</div><div class="col-md-7 text-center"><br>${inform}${sticker}${status}${ivFilter}</div></div>`);	
+		$("#pokemonList").append(`<div #="${i}" class="panel panel-default col-md-4"><div class="col-md-5 text-center">${id}${name}${img}</div><div class="col-md-7 text-center"><br>${inform}${sticker}${status}${ivFilter}</div></div>`);	
 	}
 }
 
-
 // 儲存設定檔
 function saveConfig() {
+	configGeneral.googleMapsAPIKey = $("input#googleMapsAPIKey").val();
+	configGeneral.telegramBotToken = $("input#telegramBotToken").val();
+	configGeneral.sendVenue = $("input#sendVenue").is("checked");
+	configGeneral.showDistance = $("input#showDistance").is("checked");
+	configGeneral.useDistanceLocation = $("input#useDistanceLocation").is("checked");
+	configGeneral.distanceLocation.latitude = $("input#distanceLocation-latitude").val();
+	configGeneral.distanceLocation.longitude = $("input#distanceLocation-longitude").val();
+	configGeneral.enableCommand = $("input#enableCommand").is("checked");
+	configGeneral.admins = admins;
+	configGeneral.channels = channels;
+	checkRequestDelay();
+	configGeneral.requestDelay = $("input#requestDelay").val();
+	configGeneral.pokemonNameId = $(`input#pokemonNameId[checked="true"]`).val(); 
+	configGeneral.pokemonList = [];
+	for (let id = 1; id <= 151; id++) {
+		checkIvFilter(id);
+		configGeneral.pokemonList[id] = {
+			inform: $(`input#${id}.inform`).is("checked"),
+			sticker: $(`input#${id}.sticker`).is("checked"),
+			status: $(`input#${id}.status`).is("checked"),
+			ivFilter: $(`input#${id}.ivFilter`).val() 
+		}
+	}
 
+	console.log(configGeneral);
 }
 
 // 讀取設定檔
@@ -399,15 +422,17 @@ function parseConfig() {
 	});
 	$("input#requestDelay").val(configGeneral.requestDelay);
 	checkRequestDelay();
-	$(`input#pokemonNameId[value="${configGeneral.pokemonNameId}"]`).prop("checked", true);
-	configGeneral.pokemonList.forEach(pokemon => {
-		$(`input#${pokemon.id}.inform`).prop("checked", pokemon.inform);
-		$(`input#${pokemon.id}.sticker`).prop("checked", pokemon.sticker);
-		$(`input#${pokemon.id}.status`).prop("checked", pokemon.status);
-		$(`input#${pokemon.id}.ivFilter`).val(pokemon.ivFilter);
-		checkIvFilter(pokemon.id);
-		updateInform(pokemon.id);
-		updateSticker(pokemon.id);
-		updateStatus(pokemon.id);
-	});
+	$(`input#pokemonNameId${configGeneral.pokemonNameId}`).prop("checked", true);
+	if (configGeneral.pokemonList !== undefined && configGeneral.pokemonList.length != 0) {
+		configGeneral.pokemonList.forEach(pokemon => {
+			$(`input#${pokemon.id}.inform`).prop("checked", pokemon.inform);
+			$(`input#${pokemon.id}.sticker`).prop("checked", pokemon.sticker);
+			$(`input#${pokemon.id}.status`).prop("checked", pokemon.status);
+			$(`input#${pokemon.id}.ivFilter`).val(pokemon.ivFilter);
+			checkIvFilter(pokemon.id);
+			updateInform(pokemon.id);
+			updateSticker(pokemon.id);
+			updateStatus(pokemon.id);
+		});
+	}
 }
