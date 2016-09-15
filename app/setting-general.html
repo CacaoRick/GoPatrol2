@@ -276,6 +276,18 @@
 	<br>
 	<div><!-- pokemon_list -->
 		<label for="pokemon_list" class="control-label">Pokemon 設定</label><br>
+		<span id="helpBlock" class="help-block">
+			自訂每一種 Pokemon 的訊息要如何處理<br>
+			若啟動查詢IV與招式可能會增加帳號被BAN的風險
+		</span>
+		<p class="btn-group col-md-12" role="group">
+			<button class="btn btn-primary col-md-2" id="inform-selectall">全選 傳送通知</button>
+			<button class="btn btn-primary col-md-2" id="inform-clean">清除 傳送通知</button>
+			<button class="btn btn-info col-md-2" id="sticker-selectall">全選 傳送帖圖</button>
+			<button class="btn btn-info col-md-2" id="sticker-clean">清除 傳送帖圖</button>
+			<button class="btn btn-warning col-md-2" id="checkProperty-selectall">全選 查詢IV與招式</button>
+			<button class="btn btn-warning col-md-2" id="checkProperty-clean">清除 查詢IV與招式</button>
+		</p>
 		<div id="pokemon_list" class="text-center"></div>
 	</div>
 </div>
