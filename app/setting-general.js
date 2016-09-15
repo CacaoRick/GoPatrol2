@@ -1,7 +1,4 @@
 "use strict";
-let admins = [];
-let channels = [];
-let regexp = /^[a-zA-Z@][a-zA-Z0-9_]{3,29}[a-zA-Z0-9]$/;
 $(() => {
 	// 註冊設定頁面三個按鈕
 	$("button#save").click(saveConfig);
@@ -357,23 +354,26 @@ function saveConfig() {
 	configGeneral.channels = channels;
 	checkRequestDelay();
 	configGeneral.requestDelay = $("input#requestDelay").val();
-	configGeneral.pokemonNameId = $(`input#pokemonNameId[checked="true"]`).val(); 
+	configGeneral.pokemonNameId = $(`input[name="pokemonNameId"]:checked`).val(); 
 	configGeneral.pokemonList = [];
 	for (let id = 1; id <= 151; id++) {
 		checkIvFilter(id);
-		configGeneral.pokemonList[id] = {
+		configGeneral.pokemonList.push({
 			id: id,
 			inform: $(`input#${id}.inform`).is("checked"),
 			sticker: $(`input#${id}.sticker`).is("checked"),
 			status: $(`input#${id}.status`).is("checked"),
 			ivFilter: $(`input#${id}.ivFilter`).val() 
-		}
+		});
 	}
 
 	let json = JSON.stringify(configGeneral, null, "\t");
-	fs.writeFile("./config-general.json", json, (err) => {
-		console.log(json);
-		console.log(err);
+	fs.writeFile("./config-general.json", json, { flag : "w" }, (err) => {
+		if(err == null) {
+			console.log("儲存成功");
+		} else {
+			console.log(err);
+		}
 	});
 }
 
@@ -381,7 +381,7 @@ function saveConfig() {
 function loadConfig() {
 	try {
 		// 讀取 json 設定檔
-		configGeneral = require("./config-general.json");
+		configGeneral = require("../config-general.json");
 	} catch(e) {
 		// 讀取失敗，讀預設檔
 		configGeneral = require("./default-general.js");
@@ -407,22 +407,24 @@ function parseConfig() {
 	$("input#distanceLocation-longitude").val(configGeneral.distanceLocation.longitude);
 	$("input#enableCommand").prop("checked", configGeneral.enableCommand);
 	updateEnableCommand();
+	admins = [];
 	configGeneral.admins.forEach((admin, index) => {
 		if (admin != "" && regexp.test(admin) && admins.indexOf(admin) < 0) {
 			// 檢查通過，新增
 			pushAdmin(admin);
 		} else {
 			// 需為英文、數字或底線，但不可以底線作為開頭和結尾
-			console.log(`config-general: Telegram 管理員 [${index}] = "${admin}" 格式錯誤`);
+			console.log(`config-general: Telegram 管理員 [${index}] = "${admin}" 格式錯誤或重複`);
 		}
 	});
+	channels = [];
 	configGeneral.channels.forEach((channel, index) => {
 		if (channel != "" && regexp.test(channel) && admins.indexOf(channel) < 0) {
 			// 檢查通過，新增
 			pushChannel(channel);
 		} else {
 			// 需為英文、數字或底線，但不可以底線作為開頭和結尾
-			console.log(`config-general: Telegram 頻道 [${index}] = "${channel}" 格式錯誤`);
+			console.log(`config-general: Telegram 頻道 [${index}] = "${channel}" 格式錯誤或重複`);
 		}
 	});
 	$("input#requestDelay").val(configGeneral.requestDelay);
