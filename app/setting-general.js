@@ -362,6 +362,7 @@ function saveConfig() {
 	for (let id = 1; id <= 151; id++) {
 		checkIvFilter(id);
 		configGeneral.pokemonList[id] = {
+			id: id,
 			inform: $(`input#${id}.inform`).is("checked"),
 			sticker: $(`input#${id}.sticker`).is("checked"),
 			status: $(`input#${id}.status`).is("checked"),
@@ -369,7 +370,11 @@ function saveConfig() {
 		}
 	}
 
-	console.log(configGeneral);
+	let json = JSON.stringify(configGeneral, null, "\t");
+	fs.writeFile("./config-general.json", json, (err) => {
+		console.log(json);
+		console.log(err);
+	});
 }
 
 // 讀取設定檔
