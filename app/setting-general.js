@@ -48,56 +48,20 @@ $(() => {
 
 	// 處理 Pokemon list 的通知開關
 	$("input.inform.hidden").change(event => {
-		// 先取出 id 備用，要用來選擇各個按鈕和 ivFilter
-		let id = $(event.target).attr("id");
-		if ($(event.target).parent().hasClass("btn-default")) {
-			// 原本是 btn-default off 狀態，改為 btn-primary on 狀態
-			$(event.target).parent().removeClass("btn-default");
-			$(event.target).parent().addClass("btn-primary");
-			// 將其他按鈕取消 disable
-			$(`.subOption.${id}`).removeClass("disabled");
-			// ivFilter 設為 disable false
-			$(`.ivFilter.${id}`).prop("disabled", false);
-		} else {
-			// 原本是 btn-primary on 狀態，改為 btn-default off 狀態
-			$(event.target).parent().removeClass("btn-primary");
-			$(event.target).parent().addClass("btn-default");
-			// 將其他按鈕設為 disable
-			$(`.subOption.${id}`).addClass("disabled");
-			// ivFilter 設為 disable true
-			$(`.ivFilter.${id}`).prop("disabled", true);
-		}
+		// 處理 inform 狀態
+		informChange(event.target);
 	});
 
 	// 處理 Pokemon list 的貼圖開關
 	$("input.sticker.hidden").change(event => {
-		if (!$(event.target).parent().hasClass("disabled")) {
-			if ($(event.target).parent().hasClass("btn-default")) {
-				// 原本是 btn-default off 狀態，改為 btn-info on 狀態
-				$(event.target).parent().removeClass("btn-default");
-				$(event.target).parent().addClass("btn-info");
-			} else {
-				// 原本是 btn-info on 狀態，改為 btn-default off 狀態
-				$(event.target).parent().removeClass("btn-info");
-				$(event.target).parent().addClass("btn-default");
-			}
-		}
+		// 處理 sticker 狀態
+		stickerChange(event.target);
 	});
 
 	// 處理 Pokemon list 的查IV開關
 	$("input.checkProperty.hidden").change(event => {
-		// disabled 的話不理他
-		if (!$(event.target).parent().hasClass("disabled")) {
-			if ($(event.target).parent().hasClass("btn-default")) {
-				// 原本是 btn-default off 狀態，改為 btn-warning on 狀態
-				$(event.target).parent().removeClass("btn-default");
-				$(event.target).parent().addClass("btn-warning");
-			} else {
-				// 原本是 btn-warning on 狀態，改為 btn-default off 狀態
-				$(event.target).parent().removeClass("btn-warning");
-				$(event.target).parent().addClass("btn-default");
-			}
-		}
+		// 處理 checkProperty 狀態
+		checkPropertyChange(event.target);
 	});
 });
 
@@ -194,8 +158,54 @@ function showDistanceChange(checkbox) {
 	}
 }
 
-function informChange(id) {
+// 處理 inform 狀態
+function informChange(checkbox) {
+	// 先取出 id 備用，要用來選擇各個按鈕和 ivFilter
+	let id = $(event.target).attr("id");
+	if ($(checkbox).parent().hasClass("btn-default")) {
+		// 原本是 btn-default off 狀態，改為 btn-primary on 狀態
+		$(checkbox).parent().removeClass("btn-default");
+		$(checkbox).parent().addClass("btn-primary");
+		// 將其他按鈕取消 disable
+		$(`.subOption.${id}`).removeClass("disabled");
+	} else {
+		// 原本是 btn-primary on 狀態，改為 btn-default off 狀態
+		$(checkbox).parent().removeClass("btn-primary");
+		$(ckeckbox).parent().addClass("btn-default");
+		// 將其他按鈕設為 disable
+		$(`.subOption.${id}`).addClass("disabled");
+	}
+}
 
+// 處理 sticker 狀態
+function stickerChange(checkbox) {
+	if ($(checkbox).parent().hasClass("btn-default")) {
+		// 原本是 btn-default off 狀態，改為 btn-info on 狀態
+		$(checkbox).parent().removeClass("btn-default");
+		$(checkbox).parent().addClass("btn-info");
+	} else {
+		// 原本是 btn-info on 狀態，改為 btn-default off 狀態
+		$(checkbox).parent().removeClass("btn-info");
+		$(checkbox).parent().addClass("btn-default");
+	}
+}
+
+// 處理 checkProperty 狀態
+function checkPropertyChange(checkbox) {
+	let id = $(event.target).attr("id");
+	if ($(event.target).parent().hasClass("btn-default")) {
+		// 原本是 btn-default off 狀態，改為 btn-warning on 狀態
+		$(event.target).parent().removeClass("btn-default");
+		$(event.target).parent().addClass("btn-warning");
+		// ivFilter 設為 disable false
+		$(`.ivFilter.${id}`).prop("disabled", false);
+	} else {
+		// 原本是 btn-warning on 狀態，改為 btn-default off 狀態
+		$(event.target).parent().removeClass("btn-warning");
+		$(event.target).parent().addClass("btn-default");
+		// ivFilter 設為 disable true
+		$(`.ivFilter.${id}`).prop("disabled", true);
+	}
 }
 
 // 建立 151 隻 Pokemon 的選項清單
