@@ -1,3 +1,4 @@
+"use strict";
 $(() => {
     $("#setting").click(() => {
         if (configGeneral == null) {

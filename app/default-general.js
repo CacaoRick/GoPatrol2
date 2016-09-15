@@ -1,4 +1,4 @@
-
+"use strict";
 module.exports = {
 	configVersion: 1,
 	googleMapsAPIKey: "",

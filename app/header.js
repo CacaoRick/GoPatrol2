@@ -1,3 +1,4 @@
+"use strict";
 // 註冊 header click 事件
 $(() => {
     $(".navbar-brand").click(() => {
