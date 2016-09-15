@@ -47,3 +47,8 @@ jspm_packages
 
 # typings
 /typings
+
+# GoPatrol configuration
+config-general.json
+config-account.json
+config-location.json
