@@ -14,6 +14,6 @@ module.exports = {
 	admins: [],
 	channels: [],
 	requestDelay: 5000,
-	pokemon_name: 0,
+	pokemonNameId: 0,
 	pokemon_list: []
 }

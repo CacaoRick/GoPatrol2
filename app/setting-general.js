@@ -3,22 +3,16 @@ let admins = [];
 let channels = [];
 let regexp = /^[a-zA-Z@][a-zA-Z0-9_]{3,29}[a-zA-Z0-9]$/;
 $(() => {
-	// 先讀設定檔
-	loadConfig();
-
 	// 註冊設定頁面三個按鈕
 	$("button#save").click(saveConfig);
 	$("button#reload").click(loadConfig);
 	$("button#reset").click(resetConfig);
 
-	// 處理 showDistance 狀態
-	updateShowDistance();
-
-	// 處理 enableCommand 狀態
-	updateEnableCommand();
-
 	// 建立 151 隻 Pokemon 的選項清單
 	createPokemonTbody();
+
+	// 讀設定檔
+	loadConfig();
 
 	// 處理 inform 狀態
 	$("input.inform").each((index, element) => {
@@ -35,19 +29,12 @@ $(() => {
 
 	// requestDelay 檢查，小於 5000 改 5000
 	$("input#requestDelay").focusout(event => {
-		if ($(event.target).val() < 5000) {
-			$(event.target).val(5000);
-		}
+		checkRequestDelay();
 	});
 
 	// ivFilter 檢查，小於 0 改 0，大於 100 改 100
 	$("input.ivFilter").focusout(event => {
-		if ($(event.target).val() < 0) {
-			$(event.target).val(0);
-		}
-		if ($(event.target).val() > 100) {
-			$(event.target).val(100);
-		}
+		checkIvFilter($(event.target).attr("id"));
 	});
 
 	// 加入新管理員 By Enter
@@ -125,13 +112,8 @@ function addAdmin() {
 			if (admins.indexOf(admin) < 0) {
 				// 沒新增過，將 html input 框框中的字刪除
 				$("input#admin-input").val("");
-				// 將 admin 新增進 admins
-				admins.push(admin);
-				// 讓 html 顯示出新增的 admin
-				$("#admins").append(
-					"<span username=" + admin + " class='tag label label-info'><span>" + admin + " "
-					+ "</span><span onclick='removeAdmin(this);' class='glyphicon glyphicon-remove glyphicon-white'></span></span> "
-				);
+				// 確認無誤，加入管理員
+				pushAdmin(admin)
 			} else {
 				// 已加入過
 			}
@@ -140,6 +122,17 @@ function addAdmin() {
 			$("input#admin-input").parent().parent().addClass("has-error");
 		}
 	}
+}
+
+// 確認無誤，加入管理員
+function pushAdmin(admin) {
+	// 將 admin 新增進 admins
+	admins.push(admin);
+	// 讓 html 顯示出新增的 admin
+	$("#admins").append(
+		"<span username=" + admin + " class='tag label label-info'><span>" + admin + " "
+		+ "</span><span onclick='removeAdmin(this);' class='glyphicon glyphicon-remove glyphicon-white'></span></span> "
+	);
 }
 
 // 刪除管理員
@@ -166,13 +159,8 @@ function addChannel() {
 			if (channels.indexOf(channel) < 0) {
 				// 沒新增過，將 html input 框框中的字刪除
 				$("input#channel-input").val("");
-				// 將 channel 新增進 channels
-				channels.push(channel);
-				// 讓 html 顯示出新增的 channel
-				$("#channels").append(
-					"<span channelId=" + channel + " class='tag label label-info'><span>" + channel + " "
-					+ "</span><span onclick='removeChannel(this);' class='glyphicon glyphicon-remove glyphicon-white'></span></span> "
-				);
+				// 確認無誤，新增頻道
+				pushChannel(channel);
 			} else {
 				// 已加入過
 			}
@@ -181,6 +169,17 @@ function addChannel() {
 			$("input#admin-input").parent().parent().addClass("has-error");
 		}
 	}
+}
+
+// 確認無誤，新增頻道
+function pushChannel(channel) {
+	// 將 channel 新增進 channels
+	channels.push(channel);
+	// 讓 html 顯示出新增的 channel
+	$("#channels").append(
+		"<span channelId=" + channel + " class='tag label label-info'><span>" + channel + " "
+		+ "</span><span onclick='removeChannel(this);' class='glyphicon glyphicon-remove glyphicon-white'></span></span> "
+	);
 }
 
 // 刪除頻道
@@ -201,6 +200,21 @@ function updateShowDistance() {
 	} else {
 		$("button.showDistanceSubOption").addClass("disabled");
 		$("input.showDistanceSubOption").prop("disabled", true);
+	}
+}
+
+function checkRequestDelay() {
+	if ($("input#requestDelay").val() < 5000) {
+		$("input#requestDelay").val(5000);
+	}
+}
+
+function checkIvFilter(id) {
+	if ($(`input#${id}.ivFilter`).val() < 0) {
+			$(`input#${id}.ivFilter`).val(0);
+		}
+	if ($(`input#${id}.ivFilter`).val() > 100) {
+		$(`input#${id}.ivFilter`).val(100);
 	}
 }
 
@@ -337,14 +351,63 @@ function saveConfig() {
 
 // 讀取設定檔
 function loadConfig() {
-	if (configGeneral == null) {
-		resetConfig();
-	} else {
-		
+	try {
+		// 讀取 json 設定檔
+		configGeneral = require("./config-general.json");
+	} catch(e) {
+		// 讀取失敗，讀預設檔
+		configGeneral = require("./default-general.js");
 	}
+	parseConfig();
 }
 
 // 讀取預設值
 function resetConfig() {
+	configGeneral = require("./default-general.js");
+	parseConfig();
+}
 
+// 將 config 檔的設定載入本頁面中
+function parseConfig() {
+	$("input#googleMapsAPIKey").val(configGeneral.googleMapsAPIKey);
+	$("input#telegramBotToken").val(configGeneral.telegramBotToken);
+	$("input#sendVenue").prop("checked", configGeneral.sendVenue);
+	$("input#showDistance").prop("checked", configGeneral.showDistance);
+	updateShowDistance();
+	$("input#useDistanceLocation").prop("checked", configGeneral.useDistanceLocation);
+	$("input#distanceLocation-latitude").val(configGeneral.distanceLocation.latitude);
+	$("input#distanceLocation-longitude").val(configGeneral.distanceLocation.longitude);
+	$("input#enableCommand").prop("checked", configGeneral.enableCommand);
+	updateEnableCommand();
+	configGeneral.admins.forEach((admin, index) => {
+		if (admin != "" && regexp.test(admin) && admins.indexOf(admin) < 0) {
+			// 檢查通過，新增
+			pushAdmin(admin);
+		} else {
+			// 需為英文、數字或底線，但不可以底線作為開頭和結尾
+			console.log(`config-general: Telegram 管理員 [${index}] = "${admin}" 格式錯誤`);
+		}
+	});
+	configGeneral.channels.forEach((channel, index) => {
+		if (channel != "" && regexp.test(channel) && admins.indexOf(channel) < 0) {
+			// 檢查通過，新增
+			pushChannel(channel);
+		} else {
+			// 需為英文、數字或底線，但不可以底線作為開頭和結尾
+			console.log(`config-general: Telegram 頻道 [${index}] = "${channel}" 格式錯誤`);
+		}
+	});
+	$("input#requestDelay").val(configGeneral.requestDelay);
+	checkRequestDelay();
+	$(`input#pokemonNameId[value="${configGeneral.pokemonNameId}"]`).prop("checked", true);
+	configGeneral.pokemonList.forEach(pokemon => {
+		$(`input#${pokemon.id}.inform`).prop("checked", pokemon.inform);
+		$(`input#${pokemon.id}.sticker`).prop("checked", pokemon.sticker);
+		$(`input#${pokemon.id}.status`).prop("checked", pokemon.status);
+		$(`input#${pokemon.id}.ivFilter`).val(pokemon.ivFilter);
+		checkIvFilter(pokemon.id);
+		updateInform(pokemon.id);
+		updateSticker(pokemon.id);
+		updateStatus(pokemon.id);
+	});
 }
