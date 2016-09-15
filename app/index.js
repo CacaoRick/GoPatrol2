@@ -3,6 +3,7 @@ const jQuery = require("jquery");
 const $ = jQuery;
 const bootstrap = require("bootstrap");
 const {ipcRenderer} = require("electron");
+const fs = require("fs");
 
 let configGeneral = null;
 let configAccount = null;
