@@ -42,8 +42,8 @@ $(() => {
 	});
 
 	// 處理顯示距離相關的其他選項 disabled 狀態
-	$("input#showDistance").change(event => {
-		showDistanceChange(event.target);
+	$("input#showDistance").change(() => {
+		showDistanceChange();
 	});
 
 	// 處理 Pokemon list 的通知開關
@@ -148,8 +148,8 @@ function removeChannel(span) {
 }
 
 // 處理顯示距離相關的其他選項 disabled 狀態
-function showDistanceChange(checkbox) {
-	if ($(checkbox).is(":checked")) {
+function showDistanceChange() {
+	if ($("input#showDistance").is(":checked")) {
 		$("button.showDistanceSubOption").removeClass("disabled");
 		$("input.showDistanceSubOption").prop("disabled", false);
 	} else {
