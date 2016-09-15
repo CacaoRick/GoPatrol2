@@ -183,15 +183,15 @@
 	</div>
 	<br>
 	<div><!-- distanceLocation -->
-		<label for="useDistanceLocation" class="control-label"><input class="showDistanceSubOption" id="useDistanceLocation" type="checkbox">以所在位置計算距離</label>
+		<label for="useDistanceLocation" class="control-label"><input class="showDistanceSubOption" id="useDistanceLocation" type="checkbox" disabled>以所在位置計算距離</label>
 		<div class="form-inline form-group">
-			<button class="btn btn-primary showDistanceSubOption" type="button" data-toggle="modal" data-target="#selectLocation">
+			<button class="btn btn-primary showDistanceSubOption disabled" type="button" data-toggle="modal" data-target="#selectLocation">
 				選擇位置
 			</button>
 			<label for="distanceLocation.latitude">緯度</label>
-			<input type="number" class="form-control showDistanceSubOption" id="distanceLocation.latitude" placeholder="" onClick="this.select();">
+			<input type="number" class="form-control showDistanceSubOption" id="distanceLocation.latitude" placeholder="" onClick="this.select();" disabled>
 			<label for="distanceLocation.longitude">經度</label>
-			<input type="number" class="form-control showDistanceSubOption" id="distanceLocation.longitude" placeholder="" onClick="this.select();">
+			<input type="number" class="form-control showDistanceSubOption" id="distanceLocation.longitude" placeholder="" onClick="this.select();" disabled>
 		</div>
 		<span id="helpBlock" class="help-block">
 			若勾選此項目，將用此座標來計算顯示於 Pokemon 通知中的距離，否則將自動使用巡邏中心來計算距離（若無巡邏中心且未設定此項目則不顯示）
