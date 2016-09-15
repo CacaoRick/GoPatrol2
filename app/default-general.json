@@ -2,7 +2,6 @@
 	"configVersion": 1,
 	"googleMapsAPIKey": "",
 	"telegramBotToken": "",
-	"messageDelay": 200,
 	"sendVenue": true,
 	"showDistance": true,
 	"distanceLocation": {
