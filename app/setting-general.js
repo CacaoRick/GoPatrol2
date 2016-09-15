@@ -6,16 +6,22 @@ $(() => {
 	// 建立 151 隻 Pokemon 的選項清單
 	createPokemonTbody();
 
-	// messageDelay 檢查，小於 0 會改 0
-	$("input#messageDelay").focusout(event => {
-		if ($(event.target).val() < 0) {
-			$(event.target).val(0);
+	// requestDelay 檢查，小於 5000 改 5000
+	$("input#requestDelay").focusout(event => {
+		if ($(event.target).val() < 5000) {
+			$(event.target).val(5000);
 		}
 	});
 
-
-
-
+	// ivFilter 檢查，小於 0 改 0，大於 100 改 100
+	$("input.ivFilter").focusout(event => {
+		if ($(event.target).val() < 0) {
+			$(event.target).val(0);
+		}
+		if ($(event.target).val() > 100) {
+			$(event.target).val(100);
+		}
+	});
 
 	// 加入新管理員 By Enter
 	$("input#admin-input").keypress(evente => {
@@ -44,6 +50,11 @@ $(() => {
 	// 處理顯示距離相關的其他選項 disabled 狀態
 	$("input#showDistance").change(() => {
 		showDistanceChange();
+	});
+
+	// 處理允許接收指令相關的管理員選項 disabled 狀態
+	$("input#enableCommand").change(() => {
+		enableCommandChange();
 	});
 
 	// 處理 Pokemon list 的通知開關
@@ -158,7 +169,16 @@ function showDistanceChange() {
 	}
 }
 
-// 處理 inform 狀態
+// 處理允許接收指令相關的管理員選項 disabled 狀態
+function enableCommandChange() {
+	if ($("input#enableCommand").is(":checked")) {
+		$("button.enableCommandSubOption").removeClass("disabled");
+	} else {
+		$("button.enableCommandSubOption").addClass("disabled");
+	}
+}
+
+// 處理 inform checkbutton 狀態
 function informChange(checkbox) {
 	// 先取出 id 備用，要用來選擇各個按鈕和 ivFilter
 	let id = $(event.target).attr("id");
@@ -167,17 +187,17 @@ function informChange(checkbox) {
 		$(checkbox).parent().removeClass("btn-default");
 		$(checkbox).parent().addClass("btn-primary");
 		// 將其他按鈕取消 disable
-		$(`.subOption.${id}`).removeClass("disabled");
+		$(`.pokemonSubOption.${id}`).removeClass("disabled");
 	} else {
 		// 原本是 btn-primary on 狀態，改為 btn-default off 狀態
 		$(checkbox).parent().removeClass("btn-primary");
 		$(ckeckbox).parent().addClass("btn-default");
 		// 將其他按鈕設為 disable
-		$(`.subOption.${id}`).addClass("disabled");
+		$(`.pokemonSubOption.${id}`).addClass("disabled");
 	}
 }
 
-// 處理 sticker 狀態
+// 處理 sticker checkbutton 狀態
 function stickerChange(checkbox) {
 	if ($(checkbox).parent().hasClass("btn-default")) {
 		// 原本是 btn-default off 狀態，改為 btn-info on 狀態
@@ -190,7 +210,7 @@ function stickerChange(checkbox) {
 	}
 }
 
-// 處理 checkProperty 狀態
+// 處理 checkProperty checkbutton 狀態
 function checkPropertyChange(checkbox) {
 	let id = $(event.target).attr("id");
 	if ($(event.target).parent().hasClass("btn-default")) {
@@ -215,8 +235,8 @@ function createPokemonTbody() {
 		let name = `<p>name</p>`;
 		let img = `<p><img src="assets/pokemon-3d/${i}.png" style="width: 96px; height: 96px; object-fit: contain;"></p>`;
 		let inform = `<p><label class="btn btn-default inform" style="width: 120px"><input id="${i}" class="inform hidden" type="checkbox" data-toggle="buttons">傳送通知</label></p>`;
-		let sticker = `<p><label class="btn btn-default disabled sticker subOption ${i}" style="width: 120px"><input id="${i}" class="sticker hidden" type="checkbox" data-toggle="buttons">傳送帖圖</label></p>`;
-		let checkProperty = `<p><label class="btn btn-default disabled checkProperty subOption ${i}" style="width: 120px"><input id="${i}" class="checkProperty hidden" type="checkbox" data-toggle="buttons">查詢IV與招式</label></p>`;
+		let sticker = `<p><label class="btn btn-default disabled sticker pokemonSubOption ${i}" style="width: 120px"><input id="${i}" class="sticker hidden" type="checkbox" data-toggle="buttons">傳送帖圖</label></p>`;
+		let checkProperty = `<p><label class="btn btn-default disabled checkProperty pokemonSubOption ${i}" style="width: 120px"><input id="${i}" class="checkProperty hidden" type="checkbox" data-toggle="buttons">查詢IV與招式</label></p>`;
 		let ivFilter = `<form class="form-inline"><p><div class="form-group"><label class="control-label">IV篩選≧</label><input id="${i}" class="form-control text-center ivFilter ${i}" type="number" onClick="this.select();" min="0" max="100" value="0" disabled></div></p></form>`;
 		$("#pokemon_list").append(`<div #="${i}" class="panel panel-default col-md-4"><div class="col-md-5 text-center">${id}${name}${img}</div><div class="col-md-7 text-center"><br>${inform}${sticker}${checkProperty}${ivFilter}</div></div>`);	
 	}
