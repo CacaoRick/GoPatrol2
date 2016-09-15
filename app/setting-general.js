@@ -3,7 +3,10 @@ let channels = [];
 let regexp = /^[a-zA-Z@][a-zA-Z0-9_]{3,29}[a-zA-Z0-9]$/;
 $(() => {
 
-	
+	// 註冊設定頁面三個按鈕
+	$("button#save").click(saveConfig);
+	$("button#reload").click(loadConfig);
+	$("button#reset").click(resetConfig);
 
 	// 處理 showDistance 狀態
 	updateShowDistance();
@@ -250,8 +253,10 @@ function statusCleanAll() {
 function updateEnableCommand() {
 	if ($("input#enableCommand").is(":checked")) {
 		$("button.enableCommandSubOption").removeClass("disabled");
+		$("input#admin-input").prop("disabled", false);
 	} else {
 		$("button.enableCommandSubOption").addClass("disabled");
+		$("input#admin-input").prop("disabled", true);
 	}
 }
 
@@ -321,3 +326,18 @@ function createPokemonTbody() {
 	}
 }
 
+
+// 儲存設定檔
+function saveConfig() {
+
+}
+
+// 讀取設定檔
+function loadConfig() {
+
+}
+
+// 讀取預設值
+function resetConfig() {
+
+}
