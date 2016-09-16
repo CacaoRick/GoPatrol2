@@ -369,7 +369,7 @@ function saveConfig() {
 
 	let json = JSON.stringify(configGeneral, null, "\t");
 	fs.writeFile("./config-general.json", json, { flag : "w" }, (err) => {
-		if(err == null) {
+		if (err == null) {
 			console.log("儲存成功");
 		} else {
 			console.log(err);
