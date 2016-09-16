@@ -127,11 +127,9 @@ function saveConfig() {
 }
 
 function loadConfig() {
-	console.log("load");
 	try {
 		// 讀取 json 設定檔
 		configAccount = require("../config-account.json");
-		console.log(configAccount);
 		accounts = configAccount;
 	} catch(e) {
 		
