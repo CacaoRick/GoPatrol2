@@ -25,21 +25,48 @@ $(() => {
 
 	$("button#saveAccount").click(event => {
 		let button = $(event.target);
-		let account = {
-			username: $("input#username").val(),
-			password: $("input#password").val(),
-			provider: $("select#provider").val()
+		let username = $("input#username").val();
+		let password = $("input#password").val();
+		let provider = $("select#provider").val();
+
+		let accounts;
+		if (button.data("type") == "patrol") {
+			accounts = patrols;
+		}
+		if (button.data("type") == "ivChecker") {
+			accounts = ivCheckers;
 		}
 
-		if (button.data("action") == "新增") {
-			addAccount(button.data("type"), account);
-		}
-		if (button.data("action") == "編輯") {
+		if (username == "") {
+			console.log("帳號未輸入");
+		} else if (password == "") {	
+			console.log("密碼未輸入");
+		} else if (indexOfUsername(accounts, username) >= 0) {
+			console.log("帳號重複");
+		} else {
+			let account = {
+				username: username,
+				password: password,
+				provider: provider
+			}
 
+			if (button.data("action") == "新增") {
+				addAccount(button.data("type"), account);
+			}
+			if (button.data("action") == "編輯") {
+
+			}
+			$("#account-editor").modal("hide");
 		}
 	});
-
 });
+
+// 找出 username 在 accounts 中的 index，回傳值跟 indexOf 一樣
+function indexOfUsername(accounts, username) {
+	return accounts.map(account => {
+		return account.username;
+	}).indexOf(username);
+}
 
 function addAccount(type, account) {
 	appendAccountRow(type, account);
