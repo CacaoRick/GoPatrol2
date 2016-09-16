@@ -28,6 +28,10 @@ $(() => {
 		modal.find("button#saveAccount").data("action", action);
 	});
 
+	$("#account-editor").on("shown.bs.modal", event => {
+		$("input#username").focus();
+	});
+
 	$("button#saveAccount").click(event => {
 		let button = $(event.target);
 		let username = $("input#username").val();
