@@ -21,8 +21,7 @@ let admins = [];
 let channels = [];
 let regexp = /^[a-zA-Z@][a-zA-Z0-9_]{3,29}[a-zA-Z0-9]$/;
 // setting-account
-let patrols = [];
-let ivCheckers = [];
+let accounts = [];
 
 $(() => {
 	$("#header").load("header.html");

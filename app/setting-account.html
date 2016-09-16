@@ -9,10 +9,10 @@
 		<h2>帳號設定</h2>
 	</div>
 
-	<div><!-- patrols -->
-		<label for="patrols" class="control-label"><h4>巡邏帳號</h4></label>
+	<div><!-- accounts -->
+		<label for="accounts" class="control-label"><h4>巡邏帳號</h4></label>
 		<div class="pull-right">
-			<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#account-editor" data-action="新增" data-type="patrol">
+			<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#account-editor" data-action="新增">
 				<span class="glyphicon glyphicon-plus" aria-hidden="true"></span> 新增
 			</button>
 		</div>
@@ -25,28 +25,7 @@
 					<th class="col-md-2">動作</th>
 				</tr>
 			</thead>
-			<tbody id="patrol-tbody"></tbody>
-		</table>
-	</div>
-	<br><br>
-	<div><!-- ivCheckers -->
-		<label for="ivCheckers" class="control-label"><h4>IV、招式查詢帳號</h4></label>
-		<div class="pull-right">
-			<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#account-editor" data-action="新增" data-type="ivChecker">
-				<span class="glyphicon glyphicon-plus" aria-hidden="true"></span> 新增
-			</button>
-		</div>
-		<br>
-		<table class="table table-striped table-hover">
-			<thead>
-				<tr>
-					<th class="col-md-4">帳號</th>
-					<th class="col-md-4">密碼</th>
-					<th class="col-md-2">類型</th>
-					<th class="col-md-2">動作</th>
-				</tr>
-			</thead>
-			<tbody id="ivChecker-tbody"></tbody>
+			<tbody id="account-tbody"></tbody>
 		</table>
 	</div>
 
