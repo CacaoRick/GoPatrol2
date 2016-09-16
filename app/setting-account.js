@@ -1,5 +1,12 @@
 "use strict";
 $(() => {
+	loadConfig();
+	
+	// 註冊設定頁面三個按鈕
+	$("button#save").click(saveConfig);
+	$("button#reload").click(loadConfig);
+	$("button#reset").click(resetConfig);
+
 	$("#account-editor").on("show.bs.modal", event => {
 		let button = $(event.relatedTarget);
 		let action = button.data("action");	// 新增 or 編輯
@@ -80,8 +87,8 @@ function indexOfUsername(accounts, username) {
 }
 
 function addAccount(account) {
-	appendAccountRow(account);
 	accounts.push(account);
+	appendAccountRow(account);
 }
 
 function appendAccountRow(account) {
@@ -105,4 +112,34 @@ function buildActionButton(username) {
 	let editButton = `<button type="button" class="btn btn-primary btn-xs" data-toggle="modal" data-target="#account-editor" data-action="編輯" data-username="${username}"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span> 編輯</button>`;
 	let deleteButton = `<button type="button" class="btn btn-danger btn-xs" onclick="deleteAccount('${username}')"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span> 刪除</button>`;
 	return editButton + " " + deleteButton;
+}
+
+function saveConfig() {
+	configAccount = accounts;
+	let json = JSON.stringify(configAccount, null, "\t");
+	fs.writeFile("./config-account.json", json, { flag : "w" }, (err) => {
+		if (err == null) {
+			console.log("儲存成功");
+		} else {
+			console.log(err);
+		}
+	});
+}
+
+function loadConfig() {
+	console.log("load");
+	try {
+		// 讀取 json 設定檔
+		configAccount = require("../config-account.json");
+		console.log(configAccount);
+		accounts = configAccount;
+	} catch(e) {
+		
+	}
+	loadAccount();
+}
+
+function resetConfig() {
+	accounts = [];
+	loadAccount();
 }
