@@ -22,6 +22,8 @@ let channels = [];
 let regexp = /^[a-zA-Z@][a-zA-Z0-9_]{3,29}[a-zA-Z0-9]$/;
 // setting-account
 let accounts = [];
+let isLoadMapApi = false;
+let locationMap;
 
 $(() => {
 	$("#header").load("header.html");
@@ -38,5 +40,24 @@ function checkConfig() {
 	} else {
 		// 全部都有
 		$("#main").load("map.html");
+	}
+}
+
+function initLocationMap() {
+	locationMap = new google.maps.Map(document.getElementById('location-map'), {
+		center: {lat: -34.397, lng: 150.644},
+		zoom: 8
+	});
+}
+
+function initGoogleMapsApi(){
+	if (isLoadMapApi) {
+		initLocationMap();
+	} else {
+		let script_tag = document.createElement("script");
+		script_tag.setAttribute("type", "text/javascript");
+		script_tag.setAttribute("src", `https://maps.googleapis.com/maps/api/js?key=${configGeneral.googleMapsAPIKey}&callback=initLocationMap`);
+		(document.getElementsByTagName("head")[0] || document.documentElement).appendChild(script_tag);
+		isLoadMapApi = true;
 	}
 }
