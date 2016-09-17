@@ -45,8 +45,8 @@ function checkConfig() {
 
 function initLocationMap() {
 	locationMap = new google.maps.Map(document.getElementById('location-map'), {
-		center: {lat: -34.397, lng: 150.644},
-		zoom: 8
+		center: {lat: 23.973285, lng: 120.9768753},
+		zoom: 7
 	});
 }
 

@@ -7,8 +7,8 @@ module.exports = {
 	showDistance: false,
 	useDistanceLocation: false,
 	distanceLocation: {
-		latitude: 25.05,
-		longitude: 121.55
+		latitude: 23.973285,
+		longitude: 120.9768753
 	},
 	enableCommand: false,
 	admins: [],
