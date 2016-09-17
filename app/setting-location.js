@@ -1,10 +1,12 @@
 "use strict";
 $(() => {
 	$(window).resize(function () {
-	var h = $(window).height(),
-		offsetTop = 215; // Calculate the top offset
+		let h = $(window).height();
+		let offsetTop = 215;		// Calculate the top offset
+		let height = h - offsetTop;
 
-		$(".map-canvas").css("height", (h - offsetTop));
+		$(".map-canvas").css("height", height);
+		$(".map-menu").css("height", height);
 	}).resize();
 
 	if (typeof configGeneral.googleMapsAPIKey === "undefined" || configGeneral.googleMapsAPIKey == "") {
@@ -12,6 +14,8 @@ $(() => {
 	} else {
 		initGoogleMaps(initLocationMap);
 	}
+
+	loadConfig();
 });
 
 // 初始化 LocationMap
@@ -25,17 +29,94 @@ function initLocationMap() {
 
 	// 雙擊加入新的巡邏中心
 	locationMap.addListener("dblclick", event => {
-		addLocation(event.latLng, locationMap);
+		addLocation(event.latLng);
 	});
 }
 
 // 加入新巡邏中心
-function addLocation(latLng, map) {
-	var marker = new google.maps.Marker({
-			position: latLng,
-			map: map
+function addLocation(latLng) {
+	// 存入 locations
+	locations.push({
+		name: `巡邏範圍${locations.length + 1}`,
+		latLng: {
+			lat: latLng.lat(),
+			lng: latLng.lng()
+		},
+		steps: 2
 	});
-	map.panTo(latLng);
 
+	// 在地圖上加入 marker
+	let marker = new google.maps.Marker({
+			position: latLng,
+			map: locationMap
+	});
+	markers.push(marker);
+
+	// 移動地圖
+	locationMap.panTo(latLng);
+	locationMap.setZoom(15);
 	
+	updateLocationList();
+}
+
+// 移除所有 Marker
+function removeAllMarkers() {
+	markers.forEach(marker => {
+		marker.setMap(null);
+	});
+	markers = [];
+}
+
+function updateLocationList() {
+	let locationList = $("#location-list");
+	locationList.empty();
+	locations.forEach(location => {
+
+	});
+}
+
+function saveConfig() {
+	configLocation = locations;
+	let json = JSON.stringify(configLocation, null, "\t");
+	fs.writeFile("./config-location.json", json, { flag : "w" }, (err) => {
+		if (err == null) {
+			console.log("儲存成功");
+		} else {
+			console.log(err);
+		}
+	});
+}
+
+function loadConfig() {
+	try {
+		// 讀取 json 設定檔
+		configLocation = require("../config-location.json");
+		locations = configLocation;
+	} catch(e) {
+		console.log(e);	
+	}
+	buildMarkers();
+	updateLocationList();
+}
+
+function buildMarkers() {
+	// 清空地圖上的 marker
+	removeAllMarkers();
+	// 從 locations 中加入 markers
+	locations.forEach(location => {
+		// 在地圖上加入 marker
+		let marker = new google.maps.Marker({
+			position: new google.maps.LatLng(location.latLng.lat, location.latLng.lng),
+			map: locationMap
+		});
+		markers.push(marker);
+	});
+}
+
+function resetConfig() {
+	// 清空地圖上的 marker
+	removeAllMarkers();
+	// 清空 locations
+	locations = [];
+	updateLocationList();
 }
