@@ -132,7 +132,7 @@ function loadConfig() {
 		configAccount = require("../config-account.json");
 		accounts = configAccount;
 	} catch(e) {
-		
+		console.log(e);	
 	}
 	loadAccount();
 }
