@@ -18,4 +18,14 @@ function bindEditableEvent() {
 		input.hide();
 		editable.show();		
 	});
+
+	$(".editable-input").keypress(event => {
+		if (event.which == 13) {
+			let input = $(event.target);
+			let editable = input.parent().find(".editable");
+			editable.text(input.val());
+			input.hide();
+			editable.show();
+		}
+	});
 }
