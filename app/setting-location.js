@@ -35,20 +35,22 @@ function initLocationMap() {
 
 // 加入新巡邏中心
 function addLocation(latLng) {
-	// 存入 locations
-	locations.push({
-		name: `巡邏範圍${locations.length + 1}`,
+	let location = {
+		name: `巡邏位置${locations.length + 1}`,
 		latLng: {
-			lat: latLng.lat(),
-			lng: latLng.lng()
+			lat: Math.floor6(latLng.lat()),
+			lng: Math.floor6(latLng.lng())
 		},
 		steps: 2
-	});
+	};
+
+	// 存入 locations
+	locations.push(location);
 
 	// 在地圖上加入 marker
 	let marker = new google.maps.Marker({
-			position: latLng,
-			map: locationMap
+		position: latLng,
+		map: locationMap
 	});
 	markers.push(marker);
 
@@ -57,6 +59,34 @@ function addLocation(latLng) {
 	locationMap.setZoom(15);
 	
 	updateLocationList();
+}
+
+function appendLocationList(name, lat, lng, steps) {
+	let li = 
+	`<li class="list-group-item">
+		<p>
+			<strong id="name" class="editable list-group-item-heading">${name}</strong>
+			<input id="name" type="text" class="editable-input form-control" style="width: 160px; display: none;" value="${name}">
+			<button type="button" class="close" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+		</p>
+		<div class="list-group-item-text">
+			<form class="form-inline">
+				<div class="form-group"><span>緯度：</span>
+					<span id="lat" class="editable" style="width: 120px color:blue;">${lat}</span>
+					<input id="lat" type="number" class="editable-input form-control" style="width: 140px; display: none;" value="${lat}">
+				</div><br>
+				<div class="form-group"><span>經度：</span>
+					<span id="lng" class="editable" style="width: 120px">${lng}</span>
+					<input id="lng" type="number" class="editable-input form-control" style="width: 140px; display: none;" value="${lng}">
+				</div><br>
+				<div class="form-group"><span>範圍：</span>
+					<span id="steps" class="editable" style="width: 120px">${steps}</span>
+					<input id="steps" type="number" class="editable-input form-control" style="width: 100px; display: none;" value="${steps}">
+				</div>
+			</form>
+		</div>
+	</li>`;
+	$("ul#location-list").append(li);
 }
 
 // 移除所有 Marker
@@ -71,8 +101,10 @@ function updateLocationList() {
 	let locationList = $("#location-list");
 	locationList.empty();
 	locations.forEach(location => {
-
+		// 插入 Location list
+		appendLocationList(location.name, location.latLng.lat, location.latLng.lng, location.steps)
 	});
+	bindEditable();
 }
 
 function saveConfig() {
