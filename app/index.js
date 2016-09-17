@@ -27,6 +27,7 @@ let accounts = [];
 // setting-location
 let locationMap;
 let locations = [];	// {name, latLng, steps}
+let markers = [];
 
 $(() => {
 	$("#header").load("header.html");
