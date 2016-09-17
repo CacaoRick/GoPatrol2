@@ -50,7 +50,7 @@ function initLocationMap() {
 	});
 }
 
-function initGoogleMapsApi(callback){
+function initGoogleMaps(callback){
 	if (isLoadMapApi) {
 		callback();
 	} else {
