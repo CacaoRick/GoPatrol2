@@ -26,7 +26,7 @@ let regexp = /^[a-zA-Z@][a-zA-Z0-9_]{3,29}[a-zA-Z0-9]$/;
 let accounts = [];
 // setting-location
 let locationMap;
-let locations = [];
+let locations = [];	// {name, latLng, steps}
 
 $(() => {
 	$("#header").load("header.html");
@@ -44,20 +44,6 @@ function checkConfig() {
 		// 全部都有
 		$("#main").load("map.html");
 	}
-}
-
-function initLocationMap() {
-	locationMap = new google.maps.Map(document.getElementById('location-map'), {
-		center: {lat: 23.973285, lng: 120.9768753},
-		zoom: 7,
-		streetViewControl: false,
-		disableDoubleClickZoom: true
-	});
-
-	// 雙擊加入新的巡邏中心
-	locationMap.addListener("dblclick", event => {
-		addLocation(event.latLng, locationMap);
-	});
 }
 
 function initGoogleMaps(callback){
