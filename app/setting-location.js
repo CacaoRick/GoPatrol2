@@ -16,6 +16,11 @@ $(() => {
 	}
 
 	loadConfig();
+
+	// 註冊設定頁面三個按鈕
+	$("button#save").click(saveConfig);
+	$("button#reload").click(loadConfig);
+	$("button#reset").click(resetConfig);
 });
 
 // 初始化 LocationMap
@@ -113,7 +118,7 @@ function saveConfig() {
 	configLocation = markers.map(marker => {
 		return marker.patrolLocation;
 	});
-	
+
 	let json = JSON.stringify(configLocation, null, "\t");
 	fs.writeFile("./config-location.json", json, { flag : "w" }, (err) => {
 		if (err == null) {
