@@ -108,7 +108,7 @@ function updateLocationList() {
 		// 插入 Location list
 		appendLocationList(id, location.name, location.latLng.lat, location.latLng.lng, location.steps)
 	});
-	bindEditable();
+	bindLocationListEvent();
 }
 
 function saveConfig() {
@@ -157,4 +157,8 @@ function resetConfig() {
 	// 清空 locations
 	locations = [];
 	updateLocationList();
+}
+
+function bindLocationListEvent() {
+	bindEditableEvent();
 }

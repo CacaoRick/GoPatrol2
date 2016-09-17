@@ -1,4 +1,4 @@
-function bindEditable() {
+function bindEditableEvent() {
     $(".editable").off("click");
     $(".editable-input").off("focusout");
 
