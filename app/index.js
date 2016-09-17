@@ -1,8 +1,9 @@
 "use strict";
+require("./math-extand.js");
 const jQuery = require("jquery");
 const $ = jQuery;
-const bootstrap = require("bootstrap");
 const fs = require("fs");
+const bootstrap = require("bootstrap");
 const {ipcRenderer} = require("electron");
 
 let configGeneral = null;
@@ -57,8 +58,4 @@ function initGoogleMaps(callback){
 		(document.getElementsByTagName("head")[0] || document.documentElement).appendChild(script_tag);
 		isLoadMapApi = true;
 	}
-}
-
-Math.floor6 = function(num) {
-	return Math.floor(num * 1000000 + 0.5) / 1000000
 }
