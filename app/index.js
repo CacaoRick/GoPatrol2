@@ -58,3 +58,7 @@ function initGoogleMaps(callback){
 		isLoadMapApi = true;
 	}
 }
+
+Math.floor6 = function(num) {
+	return Math.floor(num * 1000000 + 0.5) / 1000000
+}
