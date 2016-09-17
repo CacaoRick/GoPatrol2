@@ -60,9 +60,8 @@ function addLocation(latLng) {
 	markers.push(marker);
 
 	// 移動地圖
-	locationMap.panTo(latLng);
-	locationMap.setZoom(15);
-	
+	updateBound();
+	// 重新產生 Location List
 	updateLocationList();
 }
 
@@ -138,6 +137,9 @@ function loadConfig() {
 	} catch(e) {
 		console.log(e);	
 	}
+	// 移動地圖
+	updateBound();
+	// 重新產生 Location List
 	updateLocationList();
 }
 
@@ -185,4 +187,14 @@ function indexOfMarker(patrolId) {
 	return markers.map(marker => {
 		return marker.patrolId.toString();
 	}).indexOf(patrolId);
+}
+
+function updateBound() {
+	let latlngbounds = new google.maps.LatLngBounds;
+	markers.forEach(marker => {
+		latlngbounds.extend(marker.getPosition());
+	});
+
+	locationMap.setCenter(latlngbounds.getCenter());
+	locationMap.fitBounds(latlngbounds); 
 }
