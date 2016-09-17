@@ -50,7 +50,9 @@ function addLocation(latLng) {
 	// 在地圖上加入 marker
 	let marker = new google.maps.Marker({
 		position: latLng,
-		map: locationMap
+		map: locationMap,
+		patrolId: patrolId++,
+		patrolLocation: location
 	});
 	markers.push(marker);
 
@@ -61,27 +63,27 @@ function addLocation(latLng) {
 	updateLocationList();
 }
 
-function appendLocationList(name, lat, lng, steps) {
+function appendLocationList(id, name, lat, lng, steps) {
 	let li = 
 	`<li class="list-group-item">
 		<p>
 			<strong id="name" class="editable list-group-item-heading">${name}</strong>
 			<input id="name" type="text" class="editable-input form-control" style="width: 160px; display: none;" value="${name}">
-			<button type="button" class="close" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+			<button type="button" class="close" aria-label="Close" data-patrolId="id"><span aria-hidden="true">&times;</span></button>
 		</p>
 		<div class="list-group-item-text">
 			<form class="form-inline">
 				<div class="form-group"><span>緯度：</span>
 					<span id="lat" class="editable" style="width: 120px color:blue;">${lat}</span>
-					<input id="lat" type="number" class="editable-input form-control" style="width: 140px; display: none;" value="${lat}">
+					<input id="lat" type="number" class="editable-input form-control" data-patrolId="id" style="width: 140px; display: none;" value="${lat}">
 				</div><br>
 				<div class="form-group"><span>經度：</span>
 					<span id="lng" class="editable" style="width: 120px">${lng}</span>
-					<input id="lng" type="number" class="editable-input form-control" style="width: 140px; display: none;" value="${lng}">
+					<input id="lng" type="number" class="editable-input form-control" data-patrolId="id" style="width: 140px; display: none;" value="${lng}">
 				</div><br>
 				<div class="form-group"><span>範圍：</span>
 					<span id="steps" class="editable" style="width: 120px">${steps}</span>
-					<input id="steps" type="number" class="editable-input form-control" style="width: 100px; display: none;" value="${steps}">
+					<input id="steps" type="number" class="editable-input form-control" data-patrolId="id" style="width: 100px; display: none;" value="${steps}">
 				</div>
 			</form>
 		</div>
@@ -100,9 +102,11 @@ function removeAllMarkers() {
 function updateLocationList() {
 	let locationList = $("#location-list");
 	locationList.empty();
-	locations.forEach(location => {
+	markers.forEach(marker => {
+		let id = marker.patrolId;
+		let location = marker.patrolLocation;
 		// 插入 Location list
-		appendLocationList(location.name, location.latLng.lat, location.latLng.lng, location.steps)
+		appendLocationList(id, location.name, location.latLng.lat, location.latLng.lng, location.steps)
 	});
 	bindEditable();
 }
@@ -139,7 +143,9 @@ function buildMarkers() {
 		// 在地圖上加入 marker
 		let marker = new google.maps.Marker({
 			position: new google.maps.LatLng(location.latLng.lat, location.latLng.lng),
-			map: locationMap
+			map: locationMap,
+			patrolId: patrolId++,
+			patrolLocation: location
 		});
 		markers.push(marker);
 	});

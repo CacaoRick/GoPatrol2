@@ -26,8 +26,9 @@ let regexp = /^[a-zA-Z@][a-zA-Z0-9_]{3,29}[a-zA-Z0-9]$/;
 let accounts = [];
 // setting-location
 let locationMap;
+let patrolId = 0;
 let locations = [];	// {name, latLng, steps}
-let markers = [];
+let markers = [];	// 額外加入 patrolId, patrolLocation {name, latLng, steps}
 
 $(() => {
 	$("#header").load("header.html");
