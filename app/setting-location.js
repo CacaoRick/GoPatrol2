@@ -44,8 +44,8 @@ function addLocation(latLng) {
 	let location = {
 		name: `巡邏位置${patrolId + 1}`,
 		center: {
-			lat: Math.floor6(latLng.lat()),
-			lng: Math.floor6(latLng.lng())
+			lat: Math.decimal6(latLng.lat()),
+			lng: Math.decimal6(latLng.lng())
 		},
 		steps: 2
 	};
