@@ -15,8 +15,6 @@ $(() => {
 		initGoogleMaps(initLocationMap);
 	}
 
-	loadConfig();
-
 	// 註冊設定頁面三個按鈕
 	$("button#save").click(saveConfig);
 	$("button#reload").click(loadConfig);
@@ -36,13 +34,16 @@ function initLocationMap() {
 	locationMap.addListener("dblclick", event => {
 		addLocation(event.latLng);
 	});
+
+	// 載入設定檔
+	loadConfig();
 }
 
 // 加入新巡邏中心
 function addLocation(latLng) {
 	let location = {
 		name: `巡邏位置${patrolId + 1}`,
-		latLng: {
+		center: {
 			lat: Math.floor6(latLng.lat()),
 			lng: Math.floor6(latLng.lng())
 		},
@@ -108,7 +109,7 @@ function updateLocationList() {
 		let id = marker.patrolId;
 		let location = marker.patrolLocation;
 		// 插入 Location list
-		appendLocationList(id, location.name, location.latLng.lat, location.latLng.lng, location.steps)
+		appendLocationList(id, location.name, location.center.lat, location.center.lng, location.steps)
 	});
 	bindLocationListEvent();
 }
@@ -147,7 +148,7 @@ function buildMarkers() {
 	configLocation.forEach(location => {
 		// 在地圖上加入 marker
 		let marker = new google.maps.Marker({
-			position: new google.maps.LatLng(location.latLng.lat, location.latLng.lng),
+			position: new google.maps.LatLng(location.center.lat, location.center.lng),
 			map: locationMap,
 			patrolId: patrolId++,
 			patrolLocation: location

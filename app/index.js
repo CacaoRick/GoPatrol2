@@ -27,7 +27,7 @@ let accounts = [];
 // setting-location
 let locationMap;
 let patrolId = 0;
-let markers = [];	// 額外加入 patrolId, patrolLocation {name, latLng, steps}
+let markers = [];	// 額外加入 patrolId, patrolLocation {name, center, steps}
 
 $(() => {
 	$("#header").load("header.html");
