@@ -10,6 +10,6 @@ $(() => {
 	if (typeof configGeneral.googleMapsAPIKey === "undefined" || configGeneral.googleMapsAPIKey == "") {
 		console.log("Google Maps API key 未設定");
 	} else {
-		initGoogleMapsApi();
+		initGoogleMapsApi(initLocationMap);
 	}
 });

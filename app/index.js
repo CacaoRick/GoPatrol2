@@ -50,13 +50,13 @@ function initLocationMap() {
 	});
 }
 
-function initGoogleMapsApi(){
+function initGoogleMapsApi(callback){
 	if (isLoadMapApi) {
-		initLocationMap();
+		callback();
 	} else {
 		let script_tag = document.createElement("script");
 		script_tag.setAttribute("type", "text/javascript");
-		script_tag.setAttribute("src", `https://maps.googleapis.com/maps/api/js?key=${configGeneral.googleMapsAPIKey}&callback=initLocationMap`);
+		script_tag.setAttribute("src", `https://maps.googleapis.com/maps/api/js?key=${configGeneral.googleMapsAPIKey}&callback=${callback.name}`);
 		(document.getElementsByTagName("head")[0] || document.documentElement).appendChild(script_tag);
 		isLoadMapApi = true;
 	}
