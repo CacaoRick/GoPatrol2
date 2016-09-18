@@ -108,12 +108,12 @@ function removeAllMarkers() {
 // 加入新 Marker
 function addMarker(location) {
 	// 儲存巡邏範圍的圓
-	let patralCircels = [];
+	let patrolCircels = [];
 	// 算出所有巡邏點
 	let patrolPoints = hexGrid.computePatrolPoints(location.center, location.steps);
 	// 將每個要巡邏的點畫出圓形範圍
 	patrolPoints.forEach(point => {
-		patralCircels.push(drawPatrolCircle(point));
+		patrolCircels.push(drawPatrolCircle(point));
 	});
 
 	// 在地圖上加入 marker
@@ -125,7 +125,7 @@ function addMarker(location) {
 		// 巡邏位置物件
 		patrolLocation: location,
 		// 儲存所有 google map 的圓物件
-		patralCircels: patralCircels 
+		patrolCircels: patrolCircels 
 	});
 
 	// 存入 marker
@@ -178,7 +178,7 @@ function updateBound() {
 		let latlngbounds = new google.maps.LatLngBounds;
 		// 將每個巡邏點的圓形的 bounds 和 latlngbounds 連集
 		markers.forEach(marker => {
-			marker.patralCircels.forEach(circle => {
+			marker.patrolCircels.forEach(circle => {
 				latlngbounds.union(circle.getBounds());
 			});
 		});
@@ -218,7 +218,7 @@ function bindLocationListEvent() {
 		let patrolId = button.attr("data-patrolId");
 		// 找出這個位置的 marker
 		let index = indexOfMarker(patrolId);
-		// 從地圖移除這個 marker 和他的 patralCircels
+		// 從地圖移除這個 marker 和他的 patrolCircels
 		removeMarkerAndCircles(markers[index]);
 		// 從 markers 移除這個 marker
 		markers.splice(index, 1);
@@ -227,6 +227,17 @@ function bindLocationListEvent() {
 	});
 
 	// 編輯名稱
+	$(".editable-input").focusout(event => {
+		let input = $(event.target);
+		saveChange(input);
+	});
+
+	$(".editable-input").keypress(event => {
+		if (event.which == 13) {
+			let input = $(event.target);
+			saveChange(input);
+		}
+	});
 
 	// 編輯座標
 
@@ -243,9 +254,67 @@ function indexOfMarker(patrolId) {
 
 // 從地圖中移除 marker 中的 patrolCircles
 function removeMarkerAndCircles(marker) {
+	removePatrolCircles(marker)
 	marker.setMap(null);
-	marker.patralCircels.forEach(circle => {
+}
+
+// 從地圖中移除 marker 中的 patrolCircles
+function removePatrolCircles(marker) {
+	marker.patrolCircels.forEach(circle => {
 		circle.setMap(null);
+	});
+}
+
+// 儲存更改的內容
+function saveChange(input) {
+	let patrolId = input.attr("data-patrolId");
+	let marker = markers[indexOfMarker(patrolId)];
+	switch (input.attr("id")) {
+		case "name":
+			// 更改 patrolLocation 的名稱
+			marker.patrolLocation.name = input.val();
+			break;
+		case "lat":
+			// 更改 patrolLocation 的位置
+			marker.patrolLocation.center.latitude = input.val();
+			// 更改 marker 位置
+			moveMarker(marker);
+			break;
+		case "lng":
+			// 更改 patrolLocation 的位置
+			marker.patrolLocation.center.longitude = input.val();
+			// 更改 marker 位置
+			moveMarker(marker);
+			break;
+		case "steps":
+		// 更改 patrolLocation 的巡邏範圍
+			marker.patrolLocation.steps = input.val();
+			// 移除巡邏範圍的圓
+			removePatrolCircles(marker);
+			// 重畫巡邏點和範圍
+			redrawPatrolCircle(marker);
+			break;
+	}
+}
+
+// 更改 marker 位置
+function moveMarker(marker) {
+	marker.setPosition(new google.maps.LatLng(marker.patrolLocation.center.latitude, marker.patrolLocation.center.longitude));
+	// 移除巡邏範圍的圓
+	removePatrolCircles(marker);
+	// 重畫巡邏點和範圍
+	redrawPatrolCircle(marker);
+}
+
+// 重畫巡邏點和範圍
+function redrawPatrolCircle(marker) {
+	// 清空 marker 中的 patrolCircles
+	marker.patrolCircels = [];
+	// 重新算出所有巡邏點
+	let patrolPoints = hexGrid.computePatrolPoints(marker.patrolLocation.center, marker.patrolLocation.steps);
+	// 將每個要巡邏的點畫出圓形範圍
+	patrolPoints.forEach(point => {
+		marker.patrolCircels.push(drawPatrolCircle(point));
 	});
 }
 
@@ -255,7 +324,7 @@ function appendLocationList(id, name, lat, lng, steps) {
 	`<li class="list-group-item">
 		<p>
 			<strong id="name" class="editable list-group-item-heading">${name}</strong>
-			<input id="name" type="text" class="editable-input form-control" style="width: 160px; display: none;" value="${name}">
+			<input id="name" type="text" class="editable-input form-control" data-patrolId="${id}" style="width: 160px; display: none;" value="${name}">
 			<button id="remove" class="close" data-patrolId="${id}"><span aria-hidden="true">&times;</span></button>
 		</p>
 		<div class="list-group-item-text">
