@@ -136,10 +136,10 @@ function addMarker(location) {
 function drawPatrolCircle(point) {
 	return new google.maps.Circle({
 		strokeColor: '#FF0000',
-		strokeOpacity: 0.6,
+		strokeOpacity: 0.4,
 		strokeWeight: 1,
 		fillColor: '#FF0000',
-		fillOpacity: 0.2,
+		fillOpacity: 0.1,
 		map: locationMap,
 		center: new google.maps.LatLng(point.latitude, point.longitude),
 		radius: 70
@@ -231,7 +231,7 @@ function bindLocationListEvent() {
 	// 編輯座標
 
 	// 編輯範圍
-	
+
 }
 
 // 找出 patrolId 的 marker 在 markers 中的 index 
