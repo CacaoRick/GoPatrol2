@@ -44,6 +44,7 @@ app.on("activate", () => {
 	}
 });
 
+// 用瀏覽器開啟連結，arg 是網址
 ipcMain.on('open-link', (event, arg) => {
 	shell.openExternal(arg);
 })
