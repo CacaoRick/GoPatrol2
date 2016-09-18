@@ -24,7 +24,10 @@ $(() => {
 // 初始化 LocationMap
 function initLocationMap() {
 	locationMap = new google.maps.Map(document.getElementById('location-map'), {
-		center: {lat: 23.973285, lng: 120.9768753},
+		center: {
+			lat: 23.973285,
+			lng: 120.9768753
+		},
 		zoom: 7,
 		streetViewControl: false,
 		disableDoubleClickZoom: true
@@ -44,8 +47,8 @@ function addLocation(latLng) {
 	let location = {
 		name: `巡邏位置${patrolId + 1}`,
 		center: {
-			lat: Math.decimal6(latLng.lat()),
-			lng: Math.decimal6(latLng.lng())
+			latitude: Math.decimal6(latLng.lat()),
+			longitude: Math.decimal6(latLng.lng())
 		},
 		steps: 2
 	};
@@ -108,7 +111,7 @@ function updateLocationList() {
 		let id = marker.patrolId;
 		let location = marker.patrolLocation;
 		// 插入 Location list
-		appendLocationList(id, location.name, location.center.lat, location.center.lng, location.steps)
+		appendLocationList(id, location.name, location.center.latitude, location.center.longitude, location.steps)
 	});
 	bindLocationListEvent();
 }
@@ -134,6 +137,7 @@ function loadConfig() {
 		// 讀取 json 設定檔
 		configLocation = require("../config-location.json");
 		buildMarkers();
+		drawPatrolPoints();
 	} catch(e) {
 		console.log(e);	
 	}
@@ -150,12 +154,28 @@ function buildMarkers() {
 	configLocation.forEach(location => {
 		// 在地圖上加入 marker
 		let marker = new google.maps.Marker({
-			position: new google.maps.LatLng(location.center.lat, location.center.lng),
+			position: new google.maps.LatLng(location.center.latitude, location.center.longitude),
 			map: locationMap,
 			patrolId: patrolId++,
-			patrolLocation: location
+			patrolLocation: location,
+			patrolPoints: hexGrid.computePatrolPoints(location.center, location.steps + 1)
 		});
 		markers.push(marker);
+	});
+}
+
+function drawPatrolPoints() {
+	let labels = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+	let labelIndex = 0;
+	markers.forEach(marker => {
+		marker.patrolPoints.forEach((point, index) => {
+			console.log(point.latitude, point.longitude);
+			let mk = new google.maps.Marker({
+				position: new google.maps.LatLng(point.latitude, point.longitude),
+				label: labels[labelIndex++ % labels.length],
+				map: locationMap,
+			});
+		});
 	});
 }
 
