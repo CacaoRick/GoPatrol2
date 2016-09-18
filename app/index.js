@@ -1,5 +1,6 @@
 "use strict";
 require("./math-extand.js");
+const hexGrid = require("./hex-grid.js");
 const jQuery = require("jquery");
 const $ = jQuery;
 const fs = require("fs");
