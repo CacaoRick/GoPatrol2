@@ -119,7 +119,10 @@ function addMarker(location) {
 	// 在地圖上加入 marker
 	let marker = new google.maps.Marker({
 		position: new google.maps.LatLng(location.center.latitude, location.center.longitude),
+		// 標記可移動
+		draggable: true,
 		map: locationMap,
+		// 存入 infoWindow
 		infoWindow: new google.maps.InfoWindow({
 			content: location.name
 		}),
@@ -131,8 +134,25 @@ function addMarker(location) {
 		patrolCircels: patrolCircels
 	});
 
+	// 按下 marker 會顯示 infoWindow
 	marker.addListener("click", () => {
+		// 將 infoWindow 的內容設為巡邏位置的名稱
+		marker.infoWindow.setContent(marker.patrolLocation.name);
+		// 顯示 infoWindow
 		marker.infoWindow.open(marker.map, marker);
+	});
+
+	// 移動完畢，更新座標和周圍的巡邏範圍
+	marker.addListener("dragend", event => {
+		// 更改 patrolLocation 的 center 位置
+		marker.patrolLocation.center.latitude = Math.decimal6(event.latLng.lat());
+		marker.patrolLocation.center.longitude = Math.decimal6(event.latLng.lng());
+		// 重新產生 Location List
+		updateLocationList();
+		// 移除巡邏範圍的圓
+		removePatrolCircles(marker);
+		// 重畫巡邏點和範圍
+		redrawPatrolCircle(marker);
 	});
 
 	// 存入 marker
@@ -233,23 +253,17 @@ function bindLocationListEvent() {
 		updateLocationList();
 	});
 
-	// 編輯名稱
+	// 編輯 Location List 的內容
 	$(".editable-input").focusout(event => {
 		let input = $(event.target);
 		saveChange(input);
 	});
-
 	$(".editable-input").keypress(event => {
 		if (event.which == 13) {
 			let input = $(event.target);
 			saveChange(input);
 		}
 	});
-
-	// 編輯座標
-
-	// 編輯範圍
-
 }
 
 // 找出 patrolId 的 marker 在 markers 中的 index 
