@@ -3,7 +3,7 @@ $(() => {
 	// 計算地圖和要裝 Location List 的 Menu 高度
 	$(window).resize(function () {
 		let h = $(window).height();
-		let offsetTop = 215;		// Calculate the top offset
+		let offsetTop = 195;		// Calculate the top offset
 		let height = h - offsetTop;
 
 		$(".map-canvas").css("height", height);
