@@ -360,7 +360,7 @@ function appendLocationList(id, name, lat, lng, steps) {
 				</div><br>
 				<div class="form-group"><span>範圍：</span>
 					<span id="steps" class="editable" style="width: 120px">${steps}</span>
-					<input id="steps" type="number" class="editable-input form-control" data-patrolId="${id}" style="width: 100px; display: none;" value="${steps}">
+					<input id="steps" type="number" class="editable-input form-control" data-patrolId="${id}" style="width: 100px; display: none;" min="1" value="${steps}">
 				</div>
 			</form>
 		</div>
