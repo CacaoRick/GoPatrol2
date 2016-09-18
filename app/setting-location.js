@@ -54,7 +54,7 @@ function saveConfig() {
 
 	// 將設定物件轉為 json 格式存到檔案中
 	let json = JSON.stringify(configLocation, null, "\t");
-	fs.writeFile("./config-location.json", json, { flag : "w" }, (err) => {
+	fs.writeFile("./config-location.json", json, { flag: "w" }, (err) => {
 		if (err == null) {
 			console.log("儲存成功");
 		} else {
@@ -70,8 +70,8 @@ function loadConfig() {
 		configLocation = require("../config-location.json");
 		// 從設定檔產生 Markers
 		createMarkers();
-	} catch(e) {
-		console.log(e);	
+	} catch (e) {
+		console.log(e);
 	}
 	// 移動地圖
 	updateBound();
@@ -120,12 +120,19 @@ function addMarker(location) {
 	let marker = new google.maps.Marker({
 		position: new google.maps.LatLng(location.center.latitude, location.center.longitude),
 		map: locationMap,
+		infoWindow: new google.maps.InfoWindow({
+			content: location.name
+		}),
 		// 儲存一個流水號 ID，用來找到 marker
 		patrolId: patrolId++,
 		// 巡邏位置物件
 		patrolLocation: location,
 		// 儲存所有 google map 的圓物件
-		patrolCircels: patrolCircels 
+		patrolCircels: patrolCircels
+	});
+
+	marker.addListener("click", () => {
+		marker.infoWindow.open(marker.map, marker);
 	});
 
 	// 存入 marker
@@ -287,7 +294,7 @@ function saveChange(input) {
 			moveMarker(marker);
 			break;
 		case "steps":
-		// 更改 patrolLocation 的巡邏範圍
+			// 更改 patrolLocation 的巡邏範圍
 			marker.patrolLocation.steps = input.val();
 			// 移除巡邏範圍的圓
 			removePatrolCircles(marker);
@@ -320,8 +327,8 @@ function redrawPatrolCircle(marker) {
 
 // 插入 location list
 function appendLocationList(id, name, lat, lng, steps) {
-	let li = 
-	`<li class="list-group-item">
+	let li =
+		`<li class="list-group-item">
 		<p>
 			<strong id="name" class="editable list-group-item-heading">${name}</strong>
 			<input id="name" type="text" class="editable-input form-control" data-patrolId="${id}" style="width: 160px; display: none;" value="${name}">
