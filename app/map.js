@@ -29,4 +29,6 @@ function initMap() {
 		streetViewControl: false,
 		disableDoubleClickZoom: true
 	});
+
+    updateBound(map);
 }

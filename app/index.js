@@ -22,7 +22,8 @@ try {
 let isLoadMapApi = false;
 
 // map
-let map;	// Google 地圖物件
+let map;					// Google 地圖物件
+let latlngbounds = null;	// 用來調整地圖顯示位置
 
 // setting-general
 let admins = [];	// 暫存管理員
@@ -67,5 +68,28 @@ function initGoogleMaps(callback){
 		script_tag.setAttribute("src", `https://maps.googleapis.com/maps/api/js?key=${configGeneral.googleMapsAPIKey}&libraries=geometry,drawing&callback=${callback.name}`);
 		(document.getElementsByTagName("head")[0] || document.documentElement).appendChild(script_tag);
 		isLoadMapApi = true;
+	}
+}
+
+// 讓所有物件在地圖中被看到
+function updateBound(map) {
+	// 如果 latlngbounds 還沒建立先弄一個出來
+	if (latlngbounds == null) {
+		latlngbounds = new google.maps.LatLngBounds;
+	}
+
+	// 沒 marker 就不移動
+	if (markers.length > 0) {
+		// 將每個巡邏點的圓形的 bounds 和 latlngbounds 連集
+		markers.forEach(marker => {
+			marker.patrolCircels.forEach(circle => {
+				latlngbounds.union(circle.getBounds());
+			});
+		});
+
+		// 移動地圖到 bounds 的中心
+		map.setCenter(latlngbounds.getCenter());
+		// 縮放地圖讓 bounds 能全部被看見
+		map.fitBounds(latlngbounds);
 	}
 }

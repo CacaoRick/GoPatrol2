@@ -74,7 +74,7 @@ function loadConfig() {
 		console.log(e);
 	}
 	// 移動地圖
-	updateBound();
+	updateBound(locationMap);
 	// 更新 Location List
 	updateLocationList();
 }
@@ -193,28 +193,9 @@ function addLocation(latLng) {
 	addMarker(location);
 
 	// 移動地圖
-	updateBound();
+	updateBound(locationMap);
 	// 重新產生 Location List
 	updateLocationList();
-}
-
-// 讓所有物件在地圖中被看到
-function updateBound() {
-	// 沒 marker 就不移動
-	if (markers.length > 0) {
-		let latlngbounds = new google.maps.LatLngBounds;
-		// 將每個巡邏點的圓形的 bounds 和 latlngbounds 連集
-		markers.forEach(marker => {
-			marker.patrolCircels.forEach(circle => {
-				latlngbounds.union(circle.getBounds());
-			});
-		});
-
-		// 移動地圖到 bounds 的中心
-		locationMap.setCenter(latlngbounds.getCenter());
-		// 縮放地圖讓 bounds 能全部被看見
-		locationMap.fitBounds(latlngbounds);
-	}
 }
 
 // 讀取 markers 重新產生 Location List
