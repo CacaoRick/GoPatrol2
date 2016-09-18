@@ -21,6 +21,9 @@ try {
 // Google Maps
 let isLoadMapApi = false;
 
+// map
+let map;	// Google 地圖物件
+
 // setting-general
 let admins = [];	// 暫存管理員
 let channels = [];	// 暫存頻道
