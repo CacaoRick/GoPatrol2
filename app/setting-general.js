@@ -344,12 +344,12 @@ function createPokemonTbody() {
 function saveConfig() {
 	configGeneral.googleMapsAPIKey = $("input#googleMapsAPIKey").val();
 	configGeneral.telegramBotToken = $("input#telegramBotToken").val();
-	configGeneral.sendVenue = $("input#sendVenue").is("checked");
-	configGeneral.showDistance = $("input#showDistance").is("checked");
-	configGeneral.useDistanceLocation = $("input#useDistanceLocation").is("checked");
+	configGeneral.sendVenue = $("input#sendVenue").is(":checked");
+	configGeneral.showDistance = $("input#showDistance").is(":checked");
+	configGeneral.useDistanceLocation = $("input#useDistanceLocation").is(":checked");
 	configGeneral.distanceLocation.latitude = $("input#distanceLocation-latitude").val();
 	configGeneral.distanceLocation.longitude = $("input#distanceLocation-longitude").val();
-	configGeneral.enableCommand = $("input#enableCommand").is("checked");
+	configGeneral.enableCommand = $("input#enableCommand").is(":checked");
 	configGeneral.admins = admins;
 	configGeneral.channels = channels;
 	checkRequestDelay();
@@ -360,9 +360,9 @@ function saveConfig() {
 		checkIvFilter(id);
 		configGeneral.pokemonList.push({
 			id: id,
-			inform: $(`input#${id}.inform`).is("checked"),
-			sticker: $(`input#${id}.sticker`).is("checked"),
-			status: $(`input#${id}.status`).is("checked"),
+			inform: $(`input#${id}.inform`).is(":checked"),
+			sticker: $(`input#${id}.sticker`).is(":checked"),
+			status: $(`input#${id}.status`).is(":checked"),
 			ivFilter: $(`input#${id}.ivFilter`).val() 
 		});
 	}
