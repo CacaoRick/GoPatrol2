@@ -18,11 +18,12 @@ try {
 } catch(e) {
 	console.log("找不到 config，前往設定頁面");
 }
+
 // Google Maps
 let isLoadMapApi = false;
-
 // map
-let map;					// Google 地圖物件
+let map;					// 地圖主頁面的 Google 地圖物件
+let locationMap;			// 範圍設定用的 Google 地圖物件
 let latlngbounds = null;	// 用來調整地圖顯示位置
 
 // setting-general
@@ -32,7 +33,6 @@ let regexp = /^[a-zA-Z@][a-zA-Z0-9_]{3,29}[a-zA-Z0-9]$/;	// 用來檢查管理�
 // setting-account
 let accounts = [];	// 暫存帳號
 // setting-location
-let locationMap;	// 範圍設定用的 Google 地圖物件
 let patrolId = 0;	// 建立巡邏範圍用的流水號
 let markers = [];	// 額外加入 patrolId, patrolLocation {name, center, steps}
 
