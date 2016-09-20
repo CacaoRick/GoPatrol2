@@ -386,6 +386,10 @@ function loadConfig() {
 		// 讀取失敗，讀預設檔
 		configGeneral = require("./default-general.js");
 	}
+	// 清除 #admins 和 #channels
+	$("#admins").empty();
+	$("#channels").empty();
+	// 把設定檔的資料抓出來顯示在畫面上
 	parseConfig();
 }
 
