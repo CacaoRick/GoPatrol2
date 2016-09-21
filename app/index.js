@@ -74,9 +74,7 @@ function initGoogleMaps(callback){
 // 讓所有物件在地圖中被看到
 function updateBound(map) {
 	// 如果 latlngbounds 還沒建立先弄一個出來
-	if (latlngbounds == null) {
-		latlngbounds = new google.maps.LatLngBounds;
-	}
+	latlngbounds = new google.maps.LatLngBounds;
 
 	// 沒 marker 就不移動
 	if (markers.length > 0) {
