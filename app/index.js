@@ -8,16 +8,13 @@ const bootstrap = require("bootstrap");
 const {ipcRenderer} = require("electron");
 
 // 設定檔
+let pathGeneral = "./config-general.json";
+let pathAccount = "./config-account.json";
+let pathLocation = "./config-location.json";
 let configGeneral = null;
 let configAccount = null;
 let configLocation = null;
-try {
-	configGeneral = require(`../config-general.json`);
-	configAccount = require("../config-account.json");
-	configLocation = require("../config-location.json");
-} catch(e) {
-	console.log("找不到 config，前往設定頁面");
-}
+
 // Google Maps
 let isLoadMapApi = false;
 
@@ -39,8 +36,10 @@ let markers = [];	// 額外加入 patrolId, patrolLocation {name, center, steps}
 $(() => {
 	// 載入 header
 	$("#header").load("header.html");
-	// 檢查設定檔
-	checkConfig();
+	// 載入設定檔
+	loadAllConfig();
+	// 載入 map
+	//$("#main").load("map.html");
 });
 
 // 叫 main.js 用瀏覽器開啟連結
@@ -48,13 +47,23 @@ function openLink(url) {
 	ipcRenderer.send('open-link', url);
 }
 
-// 檢查設定檔，若有缺少設定檔則開啟 welcome 頁面
-function checkConfig() {
-	if (configGeneral == null || configAccount == null || configLocation == null) {
-		$("#main").load("welcome.html");
-	} else {
-		// 全部都有
-		$("#main").load("map.html");
+// 載入設定檔
+function loadAllConfig() {
+	configGeneral = loadConfig(pathGeneral);
+	configAccount = loadConfig(pathAccount);
+	configLocation = loadConfig(pathLocation);
+	console.log(configGeneral);
+	console.log(configAccount);
+	console.log(configLocation);
+}
+
+// 載入 config 回傳 json 物件
+function loadConfig(filePath) {
+	try {
+		return JSON.parse(fs.readFileSync(filePath));
+	} catch(err) {
+		console.log(err);
+		return null;
 	}
 }
 
