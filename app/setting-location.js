@@ -92,7 +92,19 @@ function createMarkers() {
 	// 清空地圖上的 marker
 	removeAllMarkers();
 	// 從 configLocation 中加入 markers
-	configLocation.forEach(location => {
+	configLocation.forEach(config => {
+		// 準備 patrolLocation 物件
+		let location = {
+			// 臨時取名 巡邏位置加上流水號
+			name: config.name,
+			// 巡邏範圍的中心，座標取道小數後六位
+			center: {
+				latitude: config.center.latitude,
+				longitude: config.center.longitude
+			},
+			// 巡邏範圍
+			steps: 2
+		};
 		addMarker(location);
 	});
 }
@@ -153,6 +165,8 @@ function addMarker(location) {
 		removePatrolCircles(marker);
 		// 重畫巡邏點和範圍
 		redrawPatrolCircle(marker);
+
+		console.log(configLocation[0].center);
 	});
 
 	// 存入 marker
