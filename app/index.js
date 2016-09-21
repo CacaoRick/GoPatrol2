@@ -38,8 +38,6 @@ $(() => {
 	$("#header").load("header.html");
 	// 載入設定檔
 	loadAllConfig();
-	// 載入 map
-	//$("#main").load("map.html");
 });
 
 // 叫 main.js 用瀏覽器開啟連結
@@ -52,9 +50,24 @@ function loadAllConfig() {
 	configGeneral = loadConfig(pathGeneral);
 	configAccount = loadConfig(pathAccount);
 	configLocation = loadConfig(pathLocation);
-	console.log(configGeneral);
-	console.log(configAccount);
-	console.log(configLocation);
+
+	let isConfiged = true;
+	if (configGeneral == null) {
+		isConfiged = false;
+		
+	}
+	if (configAccount == null) {
+		isConfiged = false;
+
+	}
+	if (configLocation == null) {
+		isConfiged = false;
+		// TODO 顯示提示，連結到設定頁面
+	}
+	if (isConfiged) {
+		// 載入 map
+		$("#main").load("map.html");
+	}
 }
 
 // 載入 config 回傳 json 物件
