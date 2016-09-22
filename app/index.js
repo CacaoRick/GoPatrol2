@@ -14,16 +14,6 @@ let pathLocation = "./config-location.json";
 let configGeneral = null;
 let configAccount = null;
 let configLocation = null;
-<<<<<<< HEAD
-=======
-try {
-	configGeneral = require(`../config-general.json`);
-	configAccount = require("../config-account.json");
-	configLocation = require("../config-location.json");
-} catch(e) {
-	console.log("找不到 config，前往設定頁面");
-}
->>>>>>> 11f9a36e144b861a49c728d23ee39c63bbbbcdc5
 
 // Google Maps
 let isLoadMapApi = false;
