@@ -50,7 +50,7 @@ function openLink(url) {
  * 將設定檔送給 main.js
  * @param  {general, account, location} config
  */
-function sendConfig(configs) {
+function sendConfig(config) {
 	ipcRenderer.send('set-config', config);
 }
 
@@ -62,18 +62,18 @@ function loadAllConfig() {
 
 	let isConfigured = true;
 	if (configGeneral == null) {
-		isConfiged = false;
+		isConfigured = false;
 		addAlert("danger", "", `${buildAlertLink("一般設定", "setting-location.html")}尚未設定。`);
 	}
 	if (configAccount == null || configAccount.length <= 0) {
-		isConfiged = false;
+		isConfigured = false;
 		addAlert("danger", "", `${buildAlertLink("帳號管理", "setting-location.html")}尚未設定。`);
 	}
 	if (configLocation == null || configLocation.length <= 0) {
-		isConfiged = false;
+		isConfigured = false;
 		addAlert("danger", "", `${buildAlertLink("巡邏範圍", "setting-location.html")}尚未設定。`);
 	}
-	if (isConfiged) {
+	if (isConfigured) {
 		// 都確認 OK 將設定傳給 main.js
 		sendConfig({
 			general: configGeneral,
