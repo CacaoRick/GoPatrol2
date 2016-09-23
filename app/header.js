@@ -2,7 +2,7 @@
 // 註冊 header click 事件
 $(() => {
     $(".navbar-brand").click(() => {
-		checkConfig();
+		$("#main").load("map.html");
 	});
 
 	$("#data").click(() => {
