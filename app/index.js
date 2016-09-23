@@ -55,15 +55,15 @@ function loadAllConfig() {
 	let isConfiged = true;
 	if (configGeneral == null) {
 		isConfiged = false;
-		addAlert("danger", "", "一般設定尚未設定。");
+		addAlert("danger", "", `${buildAlertLink("一般設定", "setting-location.html")}尚未設定。`);
 	}
 	if (configAccount == null) {
 		isConfiged = false;
-		addAlert("danger", "", "帳號管理尚未設定。");
+		addAlert("danger", "", `${buildAlertLink("帳號管理", "setting-location.html")}尚未設定。`);
 	}
 	if (configLocation == null) {
 		isConfiged = false;
-		addAlert("danger", "", "巡邏範圍尚未設定。");
+		addAlert("danger", "", `${buildAlertLink("巡邏範圍", "setting-location.html")}尚未設定。`);
 	}
 	if (isConfiged) {
 		
@@ -90,6 +90,16 @@ function addAlert(type, strongText, text) {
 		<strong>${strongText}</strong> ${text}
 	</div>`;
 	$("#alert").append(alert);
+}
+
+// 將 page 載入 #main
+function loadPage(page) {
+	$("#main").load(page);
+}
+
+// 回傳按下會將 page 載入 #main 的 alert-link
+function buildAlertLink(text, page) {
+	return `<a href="#" class="alert-link" onclick="loadPage('${page}')">${text}</a>`;
 }
 
 // 用 config 中的 googleMapsAPIKey 載入 Google Maps Api
