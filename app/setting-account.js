@@ -130,7 +130,8 @@ function loadConfig() {
 	try {
 		// 讀取 json 設定檔
 		configAccount = loadJsonConfig(pathAccount);
-		accounts = configAccount;
+		// Deep copy
+		accounts = jQuery.extend(true, [], configAccount);
 	} catch(e) {
 		console.log(e);	
 	}
