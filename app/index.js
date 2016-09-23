@@ -37,6 +37,8 @@ $(() => {
 	$("#header").load("header.html");
 	// 載入設定檔
 	loadAllConfig();
+	// 載入 map
+	$("#main").load("map.html");
 });
 
 // 叫 main.js 用瀏覽器開啟連結
@@ -64,8 +66,7 @@ function loadAllConfig() {
 		// TODO 顯示提示，連結到設定頁面
 	}
 	if (isConfiged) {
-		// 載入 map
-		$("#main").load("map.html");
+		
 	}
 }
 
