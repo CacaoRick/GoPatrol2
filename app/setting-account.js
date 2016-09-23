@@ -129,8 +129,9 @@ function saveConfig() {
 function loadConfig() {
 	try {
 		// 讀取 json 設定檔
-		configAccount = require("../config-account.json");
-		accounts = configAccount;
+		configAccount = loadJsonConfig(pathAccount);
+		// Deep copy
+		accounts = jQuery.extend(true, [], configAccount);
 	} catch(e) {
 		console.log(e);	
 	}

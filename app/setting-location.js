@@ -67,7 +67,7 @@ function saveConfig() {
 function loadConfig() {
 	try {
 		// 讀取 json 設定檔
-		configLocation = require("../config-location.json");
+		configLocation = loadJsonConfig(pathLocation);
 		// 從設定檔產生 Markers
 		createMarkers();
 	} catch (e) {
@@ -94,18 +94,8 @@ function createMarkers() {
 	// 從 configLocation 中加入 markers
 	configLocation.forEach(config => {
 		// 準備 patrolLocation 物件
-		let location = {
-			// 臨時取名 巡邏位置加上流水號
-			name: config.name,
-			// 巡邏範圍的中心，座標取道小數後六位
-			center: {
-				latitude: config.center.latitude,
-				longitude: config.center.longitude
-			},
-			// 巡邏範圍
-			steps: 2
-		};
-		addMarker(location);
+		let patrolLocation = jQuery.extend(true, {}, config);
+		addMarker(patrolLocation);
 	});
 }
 
@@ -118,11 +108,11 @@ function removeAllMarkers() {
 }
 
 // 加入新 Marker
-function addMarker(location) {
+function addMarker(patrolLocation) {
 	// 儲存巡邏範圍的圓
 	let patrolCircels = [];
 	// 算出所有巡邏點
-	let patrolPoints = hexGrid.computePatrolPoints(location.center, location.steps);
+	let patrolPoints = hexGrid.computePatrolPoints(patrolLocation.center, patrolLocation.steps);
 	// 將每個要巡邏的點畫出圓形範圍
 	patrolPoints.forEach(point => {
 		patrolCircels.push(drawPatrolCircle(point));
@@ -130,18 +120,18 @@ function addMarker(location) {
 
 	// 在地圖上加入 marker
 	let marker = new google.maps.Marker({
-		position: new google.maps.LatLng(location.center.latitude, location.center.longitude),
+		position: new google.maps.LatLng(patrolLocation.center.latitude, patrolLocation.center.longitude),
 		// 標記可移動
 		draggable: true,
 		map: locationMap,
 		// 存入 infoWindow
 		infoWindow: new google.maps.InfoWindow({
-			content: location.name
+			content: patrolLocation.name
 		}),
 		// 儲存一個流水號 ID，用來找到 marker
 		patrolId: patrolId++,
 		// 巡邏位置物件
-		patrolLocation: location,
+		patrolLocation: patrolLocation,
 		// 儲存所有 google map 的圓物件
 		patrolCircels: patrolCircels
 	});
