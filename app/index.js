@@ -50,20 +50,20 @@ function loadAllConfig() {
 	configAccount = loadConfig(pathAccount);
 	configLocation = loadConfig(pathLocation);
 
-	let isConfiged = true;
+	let isConfigured = true;
 	if (configGeneral == null) {
-		isConfiged = false;
+		isConfigured = false;
 		
 	}
 	if (configAccount == null) {
-		isConfiged = false;
+		isConfigured = false;
 
 	}
 	if (configLocation == null) {
-		isConfiged = false;
+		isConfigured = false;
 		// TODO 顯示提示，連結到設定頁面
 	}
-	if (isConfiged) {
+	if (isConfigured) {
 		// 載入 map
 		$("#main").load("map.html");
 	}
