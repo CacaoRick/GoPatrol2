@@ -38,8 +38,8 @@ app.on("window-all-closed", () => {
 	}
 });
 
+// 類似 MacOS 在沒有視窗開啟的狀況下點擊 Dock Icon 會重新開啟視窗
 app.on("activate", () => {
-	// 類似 MacOS 在沒有視窗開啟的狀況下點擊 Dock Icon 會重新開啟視窗
 	if (win === null) {
 		createWindow();
 	}
