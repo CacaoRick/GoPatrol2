@@ -67,7 +67,7 @@ function saveConfig() {
 function loadConfig() {
 	try {
 		// 讀取 json 設定檔
-		configLocation = require("../config-location.json");
+		configLocation = loadJsonConfig(pathLocation);
 		// 從設定檔產生 Markers
 		createMarkers();
 	} catch (e) {

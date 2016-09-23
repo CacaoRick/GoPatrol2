@@ -381,7 +381,7 @@ function saveConfig() {
 function loadConfig() {
 	try {
 		// 讀取 json 設定檔
-		configGeneral = require("../config-general.json");
+		configGeneral = loadJsonConfig(pathGeneral);
 	} catch(e) {
 		// 讀取失敗，讀預設檔
 		configGeneral = require("./default-general.js");
