@@ -46,9 +46,9 @@ function openLink(url) {
 
 // 載入設定檔
 function loadAllConfig() {
-	configGeneral = loadConfig(pathGeneral);
-	configAccount = loadConfig(pathAccount);
-	configLocation = loadConfig(pathLocation);
+	configGeneral = loadJsonConfig(pathGeneral);
+	configAccount = loadJsonConfig(pathAccount);
+	configLocation = loadJsonConfig(pathLocation);
 
 	let isConfigured = true;
 	if (configGeneral == null) {
@@ -70,7 +70,7 @@ function loadAllConfig() {
 }
 
 // 載入 config 回傳 json 物件
-function loadConfig(filePath) {
+function loadJsonConfig(filePath) {
 	try {
 		return JSON.parse(fs.readFileSync(filePath));
 	} catch(err) {
