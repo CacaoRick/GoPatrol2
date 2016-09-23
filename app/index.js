@@ -65,11 +65,11 @@ function loadAllConfig() {
 		isConfiged = false;
 		addAlert("danger", "", `${buildAlertLink("一般設定", "setting-location.html")}尚未設定。`);
 	}
-	if (configAccount == null) {
+	if (configAccount == null || configAccount.length <= 0) {
 		isConfiged = false;
 		addAlert("danger", "", `${buildAlertLink("帳號管理", "setting-location.html")}尚未設定。`);
 	}
-	if (configLocation == null) {
+	if (configLocation == null || configLocation.length <= 0) {
 		isConfiged = false;
 		addAlert("danger", "", `${buildAlertLink("巡邏範圍", "setting-location.html")}尚未設定。`);
 	}
