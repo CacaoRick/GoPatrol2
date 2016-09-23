@@ -375,6 +375,8 @@ function saveConfig() {
 			console.log(err);
 		}
 	});
+	// 將設定送給 main.js
+	sendConfig("general", configGeneral);
 }
 
 // 讀取設定檔

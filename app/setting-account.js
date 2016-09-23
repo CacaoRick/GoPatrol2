@@ -124,6 +124,8 @@ function saveConfig() {
 			console.log(err);
 		}
 	});
+	// 將設定送給 main.js
+	sendConfig("account", configAccount);
 }
 
 function loadConfig() {

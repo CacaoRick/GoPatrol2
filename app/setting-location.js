@@ -61,6 +61,8 @@ function saveConfig() {
 			console.log(err);
 		}
 	});
+	// 將設定送給 main.js
+	sendConfig("location", configLocation);
 }
 
 // 讀取設定
