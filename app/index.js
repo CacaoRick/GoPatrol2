@@ -48,10 +48,11 @@ function openLink(url) {
 
 /**
  * 將設定檔送給 main.js
- * @param  {general, account, location} config
+ * @param  {String} type general| account| location| all
+ * @param  {ConfigObject} config
  */
-function sendConfig(config) {
-	ipcRenderer.send('set-config', config);
+function sendConfig(type , config) {
+	ipcRenderer.send('set-config', type, config);
 }
 
 // 載入設定檔
@@ -75,7 +76,7 @@ function loadAllConfig() {
 	}
 	if (isConfigured) {
 		// 都確認 OK 將設定傳給 main.js
-		sendConfig({
+		sendConfig("all", {
 			general: configGeneral,
 			account: configAccount,
 			location: configLocation
