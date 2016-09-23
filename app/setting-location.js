@@ -62,7 +62,7 @@ function saveConfig() {
 		}
 	});
 	// 將設定送給 main.js
-	sendConfig("location", configLocation);
+	sendConfig({location: configLocation});
 }
 
 // 讀取設定
