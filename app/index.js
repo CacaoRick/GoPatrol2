@@ -55,15 +55,15 @@ function loadAllConfig() {
 	let isConfiged = true;
 	if (configGeneral == null) {
 		isConfiged = false;
-		
+		addAlert("danger", "", "一般設定尚未設定。");
 	}
 	if (configAccount == null) {
 		isConfiged = false;
-
+		addAlert("danger", "", "帳號管理尚未設定。");
 	}
 	if (configLocation == null) {
 		isConfiged = false;
-		// TODO 顯示提示，連結到設定頁面
+		addAlert("danger", "", "巡邏範圍尚未設定。");
 	}
 	if (isConfiged) {
 		
@@ -78,6 +78,18 @@ function loadConfig(filePath) {
 		console.log(err);
 		return null;
 	}
+}
+
+/**
+ * type: success, info, warning, danger
+ */
+function addAlert(type, strongText, text) {
+	let alert = 
+	`<div class="alert alert-${type}">
+		<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+		<strong>${strongText}</strong> ${text}
+	</div>`;
+	$("#alert").append(alert);
 }
 
 // 用 config 中的 googleMapsAPIKey 載入 Google Maps Api
