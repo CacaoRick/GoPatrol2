@@ -1,7 +1,7 @@
 {
   "name": "gopatrol2",
   "version": "0.1.0",
-  "main": "main.js",
+  "main": "./main/main.js",
   "bin": "./node_modules/.bin/electron",
   "scripts": {
     "start": "electron ."
