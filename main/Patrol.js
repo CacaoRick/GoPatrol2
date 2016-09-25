@@ -13,7 +13,7 @@ class Patrol {
 	}
 
 	start() {
-		this.event.emit("pokemon", "test");
+		
 	}
 }
 
