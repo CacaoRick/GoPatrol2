@@ -288,19 +288,18 @@ function beginEdit(editable) {
 }
 
 function saveInput(input) {
-	console.log("saveInput");
 	let ok = true;
 	let marker = markers[indexOfMarker(input.attr("data-patrolId"))];
 	switch (input.attr("id")) {
 		case "name":
 			let newName = input.val();
 			let oldName = marker.patrolLocation.name; 
-			if (oldName == "" || newName != oldName) {
+			if (newName != oldName) {
 				// 名稱有改變，檢查是否有重複
 				let index = _.findIndex(markers, marker => {
 					return marker.patrolLocation.name == newName
 				});
-				if (index == -1) {
+				if (index == -1 && newName != "") {
 					// 未重複
 					// 更改 marker 中 patrolLocation 的名稱
 					marker.patrolLocation.name = newName;
@@ -308,7 +307,7 @@ function saveInput(input) {
 					// 重複
 					ok = false;
 					// 提示
-					console.log("名稱重複");
+					console.log("名稱不可重複或空白");
 					// 再度 focus
 					input.focus();
 				}
@@ -341,7 +340,6 @@ function saveInput(input) {
 }
 
 function endEdit(input) {
-	console.log("endEdit");
 	let editable = input.parent().find(".editable");
 	editable.text(input.val());
 	input.hide();
