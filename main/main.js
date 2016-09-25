@@ -1,9 +1,16 @@
 "use strict";
 const {app, ipcMain, shell, BrowserWindow} = require("electron");
+const EventEmitter = require("events"); 
+const moment = require("moment");
+
+const event = new EventEmitter();
 
 // 儲存一個全域的 window 物件（瀏覽器視窗物件），才不會被 Javascript 清垃圾的時候把視窗關掉，若有多個視窗要用陣列來存
 let win;
-let config = {};
+// 設定檔
+let configGeneral = null;
+let configAccount = null;
+let configLocation = null;
 
 function createWindow() {
 	// 建立瀏覽器視窗
@@ -53,12 +60,16 @@ ipcMain.on('open-link', (event, arg) => {
 // 收到設定後覆寫 config
 ipcMain.on("set-config", (event, arg) => {
 	if (arg.general){
-		config.general = arg.general;
+		configGeneral = arg.general;
 	}
 	if (arg.account){
-		config.account = arg.account;
+		configAccount = arg.account;
 	}
 	if (arg.location){
-		config.location = arg.location;
+		configLocation = arg.location;
 	}
 })
+
+function startPatrol() {
+
+}
