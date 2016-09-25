@@ -1,11 +1,13 @@
 "use strict";
 $(() => {
 	loadConfig();
-	
+
 	// 註冊設定頁面三個按鈕
 	$("button#save").click(saveConfig);
 	$("button#reload").click(loadConfig);
 	$("button#reset").click(resetConfig);
+
+	// =============== Account =============== 
 
 	$("#account-editor").on("show.bs.modal", event => {
 		let button = $(event.relatedTarget);
@@ -21,16 +23,20 @@ $(() => {
 			// 取出編輯按鈕帶有的 username
 			let username = button.data("username");
 			// 找出他在 accounts 中的 index
-			let index = indexOfUsername(accounts, username);	
+			
+			let index = _.findIndex(accounts, object => {
+				return object.username == username;
+			});
+			let account = accounts[index];
 
 			// 將要編輯的資料從 accounts 中抓出來顯示在欄位中
-			$("input#username").val(accounts[index].username);
-			$("input#password").val(accounts[index].password);
-			$("select#provider").val(accounts[index].provider);
+			$("input#username").val(account.username);
+			$("input#password").val(account.password);
+			$("select#provider").val(account.provider);
 			// 在 saveAccount 按鈕存入 index
 			modal.find("button#saveAccount").data("index", index);
 		}
-		
+
 		modal.find(".modal-title").text(action + "帳號");
 		modal.find("button#saveAccount").data("action", action);
 	});
@@ -41,23 +47,25 @@ $(() => {
 
 	$("button#saveAccount").click(event => {
 		let button = $(event.target);
+		let provider = $("select#provider").val();
 		let username = $("input#username").val();
 		let password = $("input#password").val();
-		let provider = $("select#provider").val();
+		let task = $("select#task").val();
 
 		if (username == "") {
 			console.log("帳號未輸入");
-		} else if (password == "") {	
+		} else if (password == "") {
 			console.log("密碼未輸入");
 		} else {
 			let account = {
+				provider: provider,
 				username: username,
 				password: password,
-				provider: provider
+				task: task
 			}
 
 			if (button.data("action") == "新增") {
-				if (indexOfUsername(accounts, username) >= 0) {
+				if (_.find(accounts, object => { return object.username == username; })) {
 					console.log("帳號重複");
 				} else {
 					addAccount(account);
@@ -92,11 +100,22 @@ function addAccount(account) {
 }
 
 function appendAccountRow(account) {
-	let username = `<td>${account.username}</td>`;
-	let password = `<td>${account.password}</td>`;
-	let provider = `<td>${account.provider}</td>`;
-	let action = `<td>${buildActionButton(account.username)}</td>`;
-	$(`#account-tbody`).append(`<tr>${username}${password}${provider}${action}</tr>`);
+	$(`#account-tbody`).append(
+		`<tr>
+			<td>${account.provider}</td>
+			<td>${account.username}</td>
+			<td>${account.password}</td>
+			<td>${account.task}</td>
+			<td>
+				<button type="button" class="btn btn-primary btn-xs" data-toggle="modal" data-target="#account-editor" data-action="編輯" data-username="${account.username}">
+					<span class="glyphicon glyphicon-pencil" aria-hidden="true"></span> 編輯
+				</button>
+				<button type="button" class="btn btn-danger btn-xs" onclick="deleteAccount('${account.username}')">
+					<span class="glyphicon glyphicon-remove" aria-hidden="true"></span> 刪除
+				</button>
+			</td>
+		</tr>`
+	);
 }
 
 function loadAccount() {
@@ -108,16 +127,10 @@ function loadAccount() {
 	});
 }
 
-function buildActionButton(username) {
-	let editButton = `<button type="button" class="btn btn-primary btn-xs" data-toggle="modal" data-target="#account-editor" data-action="編輯" data-username="${username}"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span> 編輯</button>`;
-	let deleteButton = `<button type="button" class="btn btn-danger btn-xs" onclick="deleteAccount('${username}')"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span> 刪除</button>`;
-	return editButton + " " + deleteButton;
-}
-
 function saveConfig() {
 	configAccount = accounts;
 	let json = JSON.stringify(configAccount, null, "\t");
-	fs.writeFile("./config-account.json", json, { flag : "w" }, (err) => {
+	fs.writeFile("./config-account.json", json, { flag: "w" }, (err) => {
 		if (err == null) {
 			console.log("儲存成功");
 		} else {
@@ -125,7 +138,7 @@ function saveConfig() {
 		}
 	});
 	// 將設定送給 main.js
-	sendConfig({account: configAccount});
+	sendConfig({ account: configAccount });
 }
 
 function loadConfig() {
@@ -134,8 +147,14 @@ function loadConfig() {
 		configAccount = loadJsonConfig(pathAccount);
 		// Deep copy
 		accounts = jQuery.extend(true, [], configAccount);
-	} catch(e) {
-		console.log(e);	
+		// 從 location 設定取出任務
+		if (configLocation != null) {
+			tasks = [];
+			tasks = _.map(configLocation, "name");
+			tasks.push("重生點掃描");
+		}
+	} catch (e) {
+		console.log(e);
 	}
 	loadAccount();
 }
