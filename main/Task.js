@@ -5,9 +5,10 @@ const Patrol = require("./Patrol.js");
 const hexGrid = require("../util/hex-grid.js");
 
 class Task {
-	constructor(location) {
+	constructor(location, event) {
 		this.patrols = [];
 		this.location = location;
+		this.event = event;
 	}
 
 	setAccount(accounts) {
@@ -25,14 +26,16 @@ class Task {
 			let points = _.take(patrolPoints, getPoints);
 			patrolPoints = _.drop(patrolPoints, getPoints);
 
-			let patrol = new Patrol(account);
+			let patrol = new Patrol(account, this.event);
 			patrol.setPoints(points);
 			this.patrols.push(patrol);
 		});
 	}
 
 	start() {
-
+		this.patrols.forEach(patrol => {
+			patrol.start();
+		});
 	}
 	
 }

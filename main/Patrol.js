@@ -3,8 +3,9 @@ const pogobuf = require("pogobuf");
 const Promise = require("bluebird");
 
 class Patrol {
-	constructor(account) {
+	constructor(account, event) {
 		this.account = account;
+		this.event = event;
 	}
 
 	setPoints(points) {
@@ -12,7 +13,7 @@ class Patrol {
 	}
 
 	start() {
-		
+		this.event.emit("pokemon", "test");
 	}
 }
 

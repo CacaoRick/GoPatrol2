@@ -75,6 +75,12 @@ ipcMain.on("set-config", (event, arg) => {
 	startPatrol();
 })
 
+// =============== Event ===============
+
+event.on("newPokemon", pokemon => {
+	console.log(pokemon);
+});
+
 // =============== Patrol ===============
 let isRunning = false;
 let tasks = [];
@@ -82,7 +88,7 @@ let tasks = [];
 function startPatrol() {
 	// 分配任務
 	configLocation.forEach(location => {
-		let task = new Task(location);
+		let task = new Task(location, event);
 		tasks.push(task);
 
 		// 找出特定任務名稱的帳號
@@ -91,5 +97,6 @@ function startPatrol() {
 		});
 
 		task.setAccount(accounts);
+		task.start();
 	});
 }
