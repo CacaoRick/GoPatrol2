@@ -148,5 +148,16 @@ function updateBound(map) {
 		map.setCenter(latlngbounds.getCenter());
 		// 縮放地圖讓 bounds 能全部被看見
 		map.fitBounds(latlngbounds);
+	} else if (configLocation != null && configLocation.length >= 0) {
+		configLocation.forEach(location => {
+			hexGrid.computePatrolPoints(location.center, location.steps).forEach(point => {
+				latlngbounds.extend(new google.maps.LatLng({lat: point.latitude, lng: point.longitude})); 
+			});
+		});
+
+		// 移動地圖到 bounds 的中心
+		map.setCenter(latlngbounds.getCenter());
+		// 縮放地圖讓 bounds 能全部被看見
+		map.fitBounds(latlngbounds);
 	}
 }
