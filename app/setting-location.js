@@ -62,7 +62,7 @@ function saveConfig() {
 		}
 	});
 	// 將設定送給 main.js
-	sendConfig({location: configLocation});
+	sendConfig({ location: configLocation });
 }
 
 // 讀取設定
@@ -185,10 +185,25 @@ function addLocation(latLng) {
 		latitude: Math.decimal6(latLng.lat()),
 		longitude: Math.decimal6(latLng.lng())
 	}
+
+	// 產生一個不重複的名稱
+	let num = 1;
+	let name = null;
+	while(name == null) {
+		let index = _.findIndex(markers, marker => {
+			return marker.patrolLocation.name == `巡邏位置 ${num}`
+		});
+		if (index == -1) {
+			name = `巡邏位置 ${num}`;
+		} else {
+			num++;
+		}
+	}
+
 	// 準備 patrolLocation 物件
 	let location = {
 		// 臨時取名 巡邏位置加上流水號
-		name: `巡邏位置${patrolId + 1}`,
+		name: name,
 		// 巡邏範圍的中心，座標取道小數後六位
 		center: center,
 		// 巡邏範圍
@@ -223,7 +238,7 @@ function updateLocationList() {
 
 // 重新設定 location list 中的各按鈕、輸入欄位的事件
 function bindLocationListEvent() {
-	// 來自 editable.js，用來重新設定 .editable 和 .editable-input 的事件
+	// 重新設定 .editable 和 .editable-input 的事件
 	bindEditableEvent();
 
 	// 刪除按鈕
@@ -239,48 +254,65 @@ function bindLocationListEvent() {
 		// 重新讀取 markers 產生 LocationList
 		updateLocationList();
 	});
+}
 
-	// 編輯 Location List 的內容
+function bindEditableEvent() {
+    $(".editable").off("click");
+    $(".editable-input").off("focusout");
+	$(".editable-input").off("keypress");
+
+	$(".editable").click(event => {
+		let editable = $(event.target);
+		beginEdit(editable);
+	});
+
 	$(".editable-input").focusout(event => {
 		let input = $(event.target);
-		saveChange(input);
+		saveInput(input);
 	});
+
 	$(".editable-input").keypress(event => {
 		if (event.which == 13) {
 			let input = $(event.target);
-			saveChange(input);
+			saveInput(input);
 		}
 	});
 }
 
-// 找出 patrolId 的 marker 在 markers 中的 index 
-function indexOfMarker(patrolId) {
-	return markers.map(marker => {
-		return marker.patrolId.toString();
-	}).indexOf(patrolId);
+function beginEdit(editable) {
+	let input = editable.parent().find(".editable-input");
+	input.val(editable.text());
+	editable.hide();
+	input.show();
+	input.focus();
 }
 
-// 從地圖中移除 marker 中的 patrolCircles
-function removeMarkerAndCircles(marker) {
-	removePatrolCircles(marker)
-	marker.setMap(null);
-}
-
-// 從地圖中移除 marker 中的 patrolCircles
-function removePatrolCircles(marker) {
-	marker.patrolCircels.forEach(circle => {
-		circle.setMap(null);
-	});
-}
-
-// 儲存更改的內容
-function saveChange(input) {
-	let patrolId = input.attr("data-patrolId");
-	let marker = markers[indexOfMarker(patrolId)];
+function saveInput(input) {
+	console.log("saveInput");
+	let ok = true;
+	let marker = markers[indexOfMarker(input.attr("data-patrolId"))];
 	switch (input.attr("id")) {
 		case "name":
-			// 更改 patrolLocation 的名稱
-			marker.patrolLocation.name = input.val();
+			let newName = input.val();
+			let oldName = marker.patrolLocation.name; 
+			if (oldName == "" || newName != oldName) {
+				// 名稱有改變，檢查是否有重複
+				let index = _.findIndex(markers, marker => {
+					return marker.patrolLocation.name == newName
+				});
+				if (index == -1) {
+					// 未重複
+					// 更改 marker 中 patrolLocation 的名稱
+					marker.patrolLocation.name = newName;
+				} else {
+					// 重複
+					ok = false;
+					// 提示
+					console.log("名稱重複");
+					// 再度 focus
+					input.focus();
+				}
+			}
 			break;
 		case "lat":
 			// 更改 patrolLocation 的位置
@@ -303,6 +335,37 @@ function saveChange(input) {
 			redrawPatrolCircle(marker);
 			break;
 	}
+	if (ok) {
+		endEdit(input);
+	}
+}
+
+function endEdit(input) {
+	console.log("endEdit");
+	let editable = input.parent().find(".editable");
+	editable.text(input.val());
+	input.hide();
+	editable.show();
+}
+
+// 找出 patrolId 的 marker 在 markers 中的 index 
+function indexOfMarker(patrolId) {
+	return markers.map(marker => {
+		return marker.patrolId.toString();
+	}).indexOf(patrolId);
+}
+
+// 從地圖中移除 marker 中的 patrolCircles
+function removeMarkerAndCircles(marker) {
+	removePatrolCircles(marker)
+	marker.setMap(null);
+}
+
+// 從地圖中移除 marker 中的 patrolCircles
+function removePatrolCircles(marker) {
+	marker.patrolCircels.forEach(circle => {
+		circle.setMap(null);
+	});
 }
 
 // 更改 marker 位置
