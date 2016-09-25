@@ -1,6 +1,7 @@
 "use strict";
 require("./math-extand.js");
 const hexGrid = require("../util/hex-grid.js");
+const _ = require("lodash");
 const jQuery = require("jquery");
 const $ = jQuery;
 const fs = require("fs");
@@ -28,6 +29,7 @@ let channels = [];	// 暫存頻道
 let regexp = /^[a-zA-Z@][a-zA-Z0-9_]{3,29}[a-zA-Z0-9]$/;	// 用來檢查管理員使用者名稱和頻道ID
 // setting-account
 let accounts = [];	// 暫存帳號
+let tasks = [];		// 暫存任務
 // setting-location
 let patrolId = 0;	// 建立巡邏範圍用的流水號
 let markers = [];	// 額外加入 patrolId, patrolLocation {name, center, steps}
