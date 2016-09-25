@@ -1,5 +1,6 @@
 "use strict";
 const _ = require("lodash");
+const Promise = require("bluebird");
 const Patrol = require("./Patrol.js");
 const hexGrid = require("../util/hex-grid.js");
 

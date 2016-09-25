@@ -1,6 +1,7 @@
 "use strict";
 const {app, ipcMain, shell, BrowserWindow} = require("electron");
-const EventEmitter = require("events"); 
+const EventEmitter = require("events");
+const Promise = require("bluebird");
 const moment = require("moment");
 const event = new EventEmitter();
 const _ = require("lodash");
