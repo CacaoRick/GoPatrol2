@@ -2,8 +2,10 @@
 const {app, ipcMain, shell, BrowserWindow} = require("electron");
 const EventEmitter = require("events"); 
 const moment = require("moment");
-
 const event = new EventEmitter();
+const _ = require("lodash");
+
+const Task = require("./Task.js");
 
 // 儲存一個全域的 window 物件（瀏覽器視窗物件），才不會被 Javascript 清垃圾的時候把視窗關掉，若有多個視窗要用陣列來存
 let win;
@@ -68,8 +70,25 @@ ipcMain.on("set-config", (event, arg) => {
 	if (arg.location){
 		configLocation = arg.location;
 	}
+	
+	startPatrol();
 })
 
-function startPatrol() {
+// =============== Patrol ===============
+let isRunning = false;
+let tasks = [];
 
+function startPatrol() {
+	// 分配任務
+	configLocation.forEach(location => {
+		let task = new Task(location);
+		tasks.push(task);
+
+		// 找出特定任務名稱的帳號
+		let accounts = _.filter(configAccount, account => {
+			return account.task == location.name;
+		});
+
+		task.setAccount(accounts);
+	});
 }
