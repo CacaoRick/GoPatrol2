@@ -147,12 +147,8 @@ function loadConfig() {
 		configAccount = loadJsonConfig(pathAccount);
 		// Deep copy
 		accounts = jQuery.extend(true, [], configAccount);
-		// 從 location 設定取出任務
-		if (configLocation != null) {
-			tasks = [];
-			tasks = _.map(configLocation, "name");
-			tasks.push("重生點掃描");
-		}
+		// 根據 configLocation 設定 task 列表
+		buildTaskSelect();
 	} catch (e) {
 		console.log(e);
 	}
@@ -162,4 +158,17 @@ function loadConfig() {
 function resetConfig() {
 	accounts = [];
 	loadAccount();
+}
+
+function buildTaskSelect() {
+	// 從 location 設定取出任務
+	if (configLocation != null) {
+		tasks = [];
+		tasks = _.map(configLocation, "name");
+		// 額外加入重生點掃描
+		tasks.push("重生點掃描");
+	}
+	tasks.forEach(task => {
+		$("select#task").append(`<option value="${task}">${task}</option>`);
+	});
 }
