@@ -52,3 +52,6 @@ jspm_packages
 config-general.json
 config-account.json
 config-location.json
+
+# 用來測試東西
+try.js
