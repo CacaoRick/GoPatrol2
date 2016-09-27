@@ -6,7 +6,8 @@ const moment = require("moment");
 const event = new EventEmitter();
 const _ = require("lodash");
 
-const Task = require("./Task.js");
+const Process = require("./Process.js");
+const process = new Process(event);
 
 // 儲存一個全域的 window 物件（瀏覽器視窗物件），才不會被 Javascript 清垃圾的時候把視窗關掉，若有多個視窗要用陣列來存
 let win;
@@ -74,31 +75,23 @@ ipcMain.on("set-config", (event, arg) => {
 		config.location = arg.location;
 	}
 	
-	startPatrol();
+	event.emit("config");
 })
 
 // =============== Event ===============
 
+event.on("config", () => {
+	process.setConfig(config);
+});
+
+event.on("start", () => {
+	process.start();
+});
+
+event.on("stop", () => {
+	process.stop();
+});
+
 event.on("newPokemon", pokemon => {
 	console.log(pokemon);
 });
-
-// =============== Patrol ===============
-let isRunning = false;
-let tasks = [];
-
-function startPatrol() {
-	// 分配任務
-	config.location.forEach(location => {
-		let task = new Task(location, event);
-		tasks.push(task);
-
-		// 找出特定任務名稱的帳號
-		let accounts = _.filter(config.account, account => {
-			return account.task == location.name;
-		});
-
-		task.setAccount(accounts);
-		task.start();
-	});
-}
