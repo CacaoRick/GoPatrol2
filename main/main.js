@@ -11,9 +11,11 @@ const Task = require("./Task.js");
 // 儲存一個全域的 window 物件（瀏覽器視窗物件），才不會被 Javascript 清垃圾的時候把視窗關掉，若有多個視窗要用陣列來存
 let win;
 // 設定檔
-let configGeneral = null;
-let configAccount = null;
-let configLocation = null;
+let config = {
+	general = null,
+	account = null,
+	location = null
+}
 
 function createWindow() {
 	// 建立瀏覽器視窗
@@ -63,13 +65,13 @@ ipcMain.on('open-link', (event, arg) => {
 // 收到設定後覆寫 config
 ipcMain.on("set-config", (event, arg) => {
 	if (arg.general){
-		configGeneral = arg.general;
+		config.general = arg.general;
 	}
 	if (arg.account){
-		configAccount = arg.account;
+		config.account = arg.account;
 	}
 	if (arg.location){
-		configLocation = arg.location;
+		config.location = arg.location;
 	}
 	
 	startPatrol();
@@ -87,12 +89,12 @@ let tasks = [];
 
 function startPatrol() {
 	// 分配任務
-	configLocation.forEach(location => {
+	config.location.forEach(location => {
 		let task = new Task(location, event);
 		tasks.push(task);
 
 		// 找出特定任務名稱的帳號
-		let accounts = _.filter(configAccount, account => {
+		let accounts = _.filter(config.account, account => {
 			return account.task == location.name;
 		});
 
