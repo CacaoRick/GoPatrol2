@@ -1,6 +1,5 @@
 "use strict";
 const pogobuf = require("pogobuf");
-const POGOProtos = require('node-pogo-protos');
 const Promise = require("bluebird");
 
 // this.task.emit("scannedPoint", point, cell);
@@ -62,18 +61,24 @@ class Patrol {
 	scanPoint(point, delay) {
 		return new Promise((resolve, reject) => {
 			setTimeout(() => {
-				console.log("===============", point, "===============");
 				let cellIDs = pogobuf.Utils.getCellIDs(point.latitude, point.longitude);
-				return Promise.resolve(this.client.getMapObjects(cellIDs, Array(cellIDs.length).fill(0))).then(mapObjects => {
-					return mapObjects.map_cells;
-				}).each(cell => {
-					console.log('Cell ' + cell.s2_cell_id.toString());
-					console.log('Has ' + cell.catchable_pokemons.length + ' catchable Pokemon');
-					return Promise.resolve(cell.catchable_pokemons).each(catchablePokemon => {
-						console.log(' - A ' + pogobuf.Utils.getEnumKeyByValue(POGOProtos.Enums.PokemonId,
-							catchablePokemon.pokemon_id) + ' is asking you to catch it.');
+				return Promise.resolve(this.client.getMapObjects(cellIDs, Array(cellIDs.length).fill(0)))
+					.then(mapObjects => {
+						console.log("===============", point, "===============");
+						return mapObjects.map_cells;
+					})
+					.each(cell => {
+						if (cell.catchable_pokemons.length > 0) {
+							//console.log(cell.spawn_points);
+							console.log(cell.catchable_pokemons);
+						}
+						// console.log('Has ' + cell.catchable_pokemons.length + ' catchable Pokemon');
+						// return Promise.resolve(cell.catchable_pokemons)
+						// 	.each(catchablePokemon => {
+						// 		console.log(' - A ' + catchablePokemon.pokemon_id + ' is asking you to catch it.');
+						// 	});
+						resolve("find" + cell.catchable_pokemons.length);
 					});
-				});
 			}, delay);
 		}).catch(error => {
 			console.log(error);
