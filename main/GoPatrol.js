@@ -3,22 +3,24 @@ const _ = require("lodash");
 const EventEmitter = require("events");
 const Promise = require("bluebird");
 const Task = require("./Task.js");
-let isRunning = false;
-let tasks = [];
 
-class GoPatrol extends EventEmitter {
+
+class GoPatrol {
     constructor() {
         super();
+        this.event = new EventEmitter();
+        this.isRunning = false;
+        this.tasks = [];
     }
 
-    setConfit() {
+    setConfig() {
         this.config = config;
     }
 
     start() {
         // 分配任務
         config.location.forEach(location => {
-            let task = new Task(location, this);
+            let task = new Task(location, this.event);
             tasks.push(task);
 
             // 找出特定任務名稱的帳號
@@ -32,19 +34,19 @@ class GoPatrol extends EventEmitter {
     }
 
     bindEvent() {
-        this.on("config", () => {
+        this.event.on("config", () => {
             gopatrol.setConfig(config);
         });
 
-        this.on("start", () => {
+        this.event.on("start", () => {
             gopatrol.start();
         });
 
-        this.on("stop", () => {
+        this.event.on("stop", () => {
             gopatrol.stop();
         });
 
-        this.on("newPokemon", pokemon => {
+        this.event.on("newPokemon", pokemon => {
             console.log(pokemon);
         });
     }

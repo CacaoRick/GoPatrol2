@@ -73,16 +73,13 @@ ipcMain.on("set-config", (event, arg) => {
 		config.location = arg.location;
 	}
 	
-	gopatrol.emit("config");
+	// 將設定傳給 gopatrol
+	gopatrol.setConfig(config);
 })
 
 ipcMain.on('start', (event, arg) => {
 	// 先做一些檢查
 
-	gopatrol.emit("start");
+	// 開始跑巡邏
+	gopatrol.start();
 })
-
-// =============== Event ===============
-
-
-
