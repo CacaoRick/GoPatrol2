@@ -1,21 +1,19 @@
 "use strict";
 const {app, ipcMain, shell, BrowserWindow} = require("electron");
-const EventEmitter = require("events");
 const Promise = require("bluebird");
 const moment = require("moment");
-const event = new EventEmitter();
 const _ = require("lodash");
 
-const Process = require("./Process.js");
-const process = new Process(event);
+const GoPatrol = require("./GoPatrol.js");
+const gopatrol = new GoPatrol();
 
 // 儲存一個全域的 window 物件（瀏覽器視窗物件），才不會被 Javascript 清垃圾的時候把視窗關掉，若有多個視窗要用陣列來存
 let win;
 // 設定檔
 let config = {
-	general = null,
-	account = null,
-	location = null
+	general: null,
+	account: null,
+	location: null
 }
 
 function createWindow() {
@@ -75,23 +73,16 @@ ipcMain.on("set-config", (event, arg) => {
 		config.location = arg.location;
 	}
 	
-	event.emit("config");
+	gopatrol.emit("config");
+})
+
+ipcMain.on('start', (event, arg) => {
+	// 先做一些檢查
+
+	gopatrol.emit("start");
 })
 
 // =============== Event ===============
 
-event.on("config", () => {
-	process.setConfig(config);
-});
 
-event.on("start", () => {
-	process.start();
-});
 
-event.on("stop", () => {
-	process.stop();
-});
-
-event.on("newPokemon", pokemon => {
-	console.log(pokemon);
-});
