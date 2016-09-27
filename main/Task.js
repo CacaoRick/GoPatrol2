@@ -49,6 +49,7 @@ class Task extends EventEmitter {
 
 			new Promise.all(runs)
 				.then(status => {
+					this.isRunning = false;
 					console.log(status);
 				});
 		}
