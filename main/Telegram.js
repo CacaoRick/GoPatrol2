@@ -26,3 +26,4 @@ class Telegram {
 	}
 }
 
+module.exports = Telegram;
