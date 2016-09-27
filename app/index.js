@@ -45,7 +45,7 @@ $(() => {
 
 // 叫 main.js 用瀏覽器開啟連結
 function openLink(url) {
-	ipcRenderer.send('open-link', url);
+	ipcRenderer.send("open-link", url);
 }
 
 /**
@@ -53,7 +53,12 @@ function openLink(url) {
  * @param  {ConfigObject} config
  */
 function sendConfig(config) {
-	ipcRenderer.send('set-config', config);
+	ipcRenderer.send("set-config", config);
+}
+
+// 叫 main.js 用瀏覽器開啟連結
+function start() {
+	ipcRenderer.send("start");
 }
 
 // 載入設定檔
