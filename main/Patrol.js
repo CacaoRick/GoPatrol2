@@ -1,15 +1,17 @@
 "use strict";
+const _ = require("lodash");
 const pogobuf = require("pogobuf");
 const Promise = require("bluebird");
 
-// this.task.emit("newPokemon", point, pokemons);
-// this.task.emit("accountError", account, error);
+// this.event.emit("scanComplete", point, pokemons);
+// this.event.emit("accountError", account, error);
 
 class Patrol {
-	constructor(config, account, task) {
-		this.config = config;
-		this.account = account;
-		this.task = task;
+	constructor(config, account, event) {
+		this.taskStop = false;
+		this.config = config;	// 這個 config 已經是 config.general 了
+		this.account = account;	// 單一帳號
+		this.event = event;
 		this.client = new pogobuf.Client();
 		this.login = null;
 		if (this.account.provider == "ptc") {
@@ -26,70 +28,70 @@ class Patrol {
 
 	run() {
 		return new Promise((resolve, reject) => {
-			if (this.task.isRunning) {
-				if (this.login != null) {
-					this.login.login(this.account.username, this.account.password)
-						.catch(error => {
-							return `username: ${this.account.username}，provider: ${this.account.provider} 登入失敗，error: ${error.message}`;
-						})
-						.then(token => {
-							this.client.setAuthInfo(this.account.provider, token);
-							this.client.setPosition(this.points[0].latitude, this.points[0].longitude);
-							return this.client.init();
-						})
-						.catch(error => {
-							return `username: ${this.account.username}，Client.init 失敗，error: ${error.message}`;
-						})
-						.then(() => {
-							// 把每一點巡邏跑完
-							if (this.task.isRunning) {
-								new Promise.reduce(this.points, (_, point) => {
-									return this.scanPoint(point, this.config.requestDelay);
-								}, null).then(result => {
-									resolve(this.account.username);
-								});
-							} else {
-								resolve("task stop");
-							}
-						})
-						.catch(error => {
-							return `username: ${this.account.username}，error: ${error.message}`;
-						});
-				} else {
-					reject(Error(`username: ${this.account.username}，provider: ${this.account.provider} 設定錯誤`));
-				}
-			} else {
-				resolve("task stop");
+			if (this.taskStop) {
+				return resolve("task stop");
 			}
+			if (this.login == null) {
+				return reject(Error(`provider 設定錯誤`));
+			}
+			this.login.login(this.account.username, this.account.password)
+				.then(token => {
+					// 登入 Client
+					this.client.setAuthInfo(this.account.provider, token);
+					this.client.setPosition(this.points[0].latitude, this.points[0].longitude);
+					return this.client.init();
+				})
+				.then(() => {
+					// 把每一點巡邏跑完
+					new Promise.reduce(this.points, (_, point) => {
+						return this.scanPoint(point, this.config.requestDelay);
+					}, null).then(result => {
+						resolve({
+							username: this.account.username
+						});
+					});
+				})
+				.catch(error => {
+					reject(error);
+				});
 		}).catch(error => {
-			return error.message;
+			console.log(error.message);
+			return {
+				username: this.account.username,
+				error: error.message
+			}
 		});
 	}
 
 	scanPoint(point, delay) {
 		return new Promise((resolve, reject) => {
-			if (this.task.isRunning) {
-				setTimeout(() => {
-					this.client.setPosition(point.latitude, point.longitude);
-					let cellIDs = pogobuf.Utils.getCellIDs(point.latitude, point.longitude);
-					return Promise.resolve(this.client.getMapObjects(cellIDs, Array(cellIDs.length).fill(0)))
-						.then(mapObjects => {
-							console.log(`${point.latitude}, ${point.longitude}`);
-							return mapObjects.map_cells;
-						})
-						.each(cell => {
-							if (cell.catchable_pokemons.length > 0) {
-								this.task.emit("newPokemon", point, cell.catchable_pokemons);
-							}
-							resolve("find" + cell.catchable_pokemons.length);
-						});
-				}, delay);
-			} else {
+			if (this.taskStop) {
 				resolve("task stop");
+				return;
 			}
+			setTimeout(() => {
+				if (this.taskStop) {
+					resolve("task stop");
+					return;
+				}
+				this.client.setPosition(point.latitude, point.longitude);
+				let cellIDs = pogobuf.Utils.getCellIDs(point.latitude, point.longitude);
+				this.client.getMapObjects(cellIDs, Array(cellIDs.length).fill(0))
+					.then(mapObjects => {
+						return mapObjects.map_cells;
+					})
+					.map(cell => {
+						return cell.catchable_pokemons
+					})
+					.then(pokemons => {
+						pokemons = _.uniqBy(_.flatten(pokemons), "encounter_id");
+						this.event.emit("scanComplete", point, pokemons);
+						resolve("scan complete");
+					});
+			}, delay);
 		}).catch(error => {
-			console.log(error);
-			return error;
+			console.log(error.message);
+			return error.message;
 		});
 	}
 }

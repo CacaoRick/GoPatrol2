@@ -1,27 +1,26 @@
 "use strict";
 const _ = require("lodash");
 const EventEmitter = require("events");
+const moment = require("moment");
 const Task = require("./Task.js");
 
-class GoPatrol extends EventEmitter {
+class GoPatrol {
 	constructor() {
-		super();
+		this.event = new EventEmitter();
 		this.isRunning = false;
 		this.tasks = [];
-		this.bindEvent();
 	}
 
-	deleteTask() {
-		this.removeAllListeners();
-		this.tasks.forEach(task => {
-			task = null;
-		})
-		this.tasks = [];
+	setConfig(config) {
+		this.config = config;
+		this.stop();
+		this.deleteTask();
+		this.assignTask();
 	}
 
 	assignTask() {
 		this.config.location.forEach(location => {
-			let task = new Task(this.config, this);
+			let task = new Task(this.config, this.event);
 			this.tasks.push(task);
 
 			// 找出特定任務名稱的帳號
@@ -32,20 +31,22 @@ class GoPatrol extends EventEmitter {
 			// 設定 task
 			task.assignTask(location, accounts);
 		});
+		this.bindEvent()
 	}
 
-	setConfig(config) {
-		this.config = config;
-		this.stop();
-		this.deleteTask();
-		this.assignTask();
+	deleteTask() {
+		this.event.removeAllListeners();
+		this.tasks.forEach(task => {
+			task = null;
+		})
+		this.tasks = [];
 	}
 
 	start() {
 		if (!this.isRunning) {
 			this.isRunning = true;
 			console.log("gopatrol emit start");
-			this.emit("start");
+			this.event.emit("start");
 		} else {
 			console.log("gopatrol emit start but is running");
 		}
@@ -55,17 +56,18 @@ class GoPatrol extends EventEmitter {
 		if (this.isRunning) {
 			this.isRunning = false;
 			console.log("gopatrol emit stop");
-			this.emit("stop");
+			this.event.emit("stop");
 		}
 	}
 
 	bindEvent() {
-		this.on("scannedPoint", point => {
-			this.emit("stop");
+		this.event.on("scanComplete", (point, pokemons) => {
+			console.log(`- ${moment()}: find ${pokemons.length} pokemons in ${point.latitude}, ${point.longitude}`);
+			console.log(pokemons);
 		});
 
-		this.on("newPokemon", pokemon => {
-			console.log(pokemon);
+		this.event.on("accountError", (account, error) => {
+			console.log(account, error);
 		});
 	}
 }

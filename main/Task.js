@@ -5,11 +5,10 @@ const Promise = require("bluebird");
 const Patrol = require("./Patrol.js");
 const hexGrid = require("../util/hex-grid.js");
 
-class Task extends EventEmitter {
-	constructor(config, gopatrol) {
-		super();
+class Task {
+	constructor(config, event) {
 		this.config = config;
-		this.gopatrol = gopatrol;
+		this.event = event;
 		this.isRunning = false;
 		this.patrols = [];
 		this.spawnpoints = [];
@@ -19,11 +18,12 @@ class Task extends EventEmitter {
 		this.location = location;
 		this.accounts = accounts;
 		this.stop();
-		this.deletePatrols();
 		this.assignPatrols();
 	}
 
 	assignPatrols() {
+		this.deletePatrols();
+
 		let patrolPoints = hexGrid.computePatrolPoints(this.location.center, this.location.steps);
 		let pointsPerWorker = Math.floor(patrolPoints.length / this.accounts.length);
 		let lastPoints = patrolPoints.length % this.accounts.length;
@@ -34,63 +34,69 @@ class Task extends EventEmitter {
 				getPoints++;
 				lastPoints--;
 			}
-
 			let points = _.take(patrolPoints, getPoints);
 			patrolPoints = _.drop(patrolPoints, getPoints);
-			let patrol = new Patrol(this.config.general, account, this);
+			let patrol = new Patrol(this.config.general, account, this.event);
 			patrol.setPoints(points);
 			this.patrols.push(patrol);
 		});
 
-		this.bindEvent(); 
+		this.bindEvent();
 	}
 
 	deletePatrols() {
-		this.removeAllListeners();
 		this.patrols.forEach(patrol => {
+			patrol.taskStop = true;
 			patrol = null;
 		});
 		this.patrols = [];
 	}
 
-	start() {
-		if (!this.isRunning) {
-			this.isRunning = true;
-			let patrolPromises = [];
-			this.patrols.forEach(patrol => {
-				patrolPromises.push(patrol.run());
-			});
+	removeAccount(username) {
+		this.accounts = _.remove(this.accounts, account => {
+			return account.username == username;
+		})
+		this.assignPatrols();
+	}
 
-			new Promise.all(patrolPromises)
-				.then(status => {
-					this.isRunning = false;
-					console.log(status);
-				});
-		}
+	start() {
+		let patrolPromises = [];
+		this.patrols.forEach(patrol => {
+			patrol.taskStop = false;
+			patrolPromises.push(patrol.run());
+		});
+
+		new Promise.all(patrolPromises)
+			.map(result => {
+				if (result.error) {
+					this.event.emit("accountError", result.account, result.error);
+					removeAccount(result.username);
+				}
+			})
+			.then(() => {
+				start();
+			});
 	}
 
 	stop() {
-		this.isRunning = false;
+		this.patrols.forEach(patrol => {
+			patrol.taskStop = true;
+		});
 	}
 
 	bindEvent() {
-		this.gopatrol.on("start", () => {
+		this.event.on("start", () => {
 			console.log("task on start");
-			this.start();
+			if (!this.isRunning) {
+				this.isRunning = true;
+				this.start();
+			}
 		});
 
-		this.gopatrol.on("stop", () => {
+		this.event.on("stop", () => {
 			console.log("task on stop");
+			this.isRunning = false;
 			this.stop();
-		});
-
-		this.on("newPokemon", (point, pokemons) => {
-			console.log(`===== find ${pokemons.length} pokemons in ${point.latitude}, ${point.longitude} =====`);
-			console.log(pokemons);
-		});
-
-		this.on("accountError", (account, error) => {
-
 		});
 	}
 }
