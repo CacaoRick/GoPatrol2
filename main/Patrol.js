@@ -3,9 +3,6 @@ const _ = require("lodash");
 const pogobuf = require("pogobuf");
 const Promise = require("bluebird");
 
-// this.event.emit("scanComplete", point, pokemons);
-// this.event.emit("accountError", account, error);
-
 class Patrol {
 	constructor(requestDelay, encounterList, account, event) {
 		this.taskStop = false;
@@ -56,7 +53,6 @@ class Patrol {
 					reject(error);
 				});
 		}).catch(error => {
-			console.log(error.message);
 			return {
 				username: this.account.username,
 				error: error.message
@@ -75,28 +71,36 @@ class Patrol {
 					resolve("task stop");
 					return;
 				}
+				// 更改 client 位置
 				this.client.setPosition(point.latitude, point.longitude);
+				// 取得目前位置的 cellIDs
 				let cellIDs = pogobuf.Utils.getCellIDs(point.latitude, point.longitude);
+				// 根據 cellIDs 取得 mapObjects
 				this.client.getMapObjects(cellIDs, Array(cellIDs.length).fill(0))
 					.then(mapObjects => {
+						// 取出 map_cells
 						return mapObjects.map_cells;
 					})
 					.map(cell => {
+						// 取出每個 cell 的 catchable_pokemons
 						return cell.catchable_pokemons
 					})
 					.then(pokemons => {
 						// 用 encounter_id 篩選出不重複的 pokemons
 						pokemons = _.uniqBy(_.flatten(pokemons), "encounter_id");
 
+						// 依序去跑每隻 pokemon
 						new Promise.reduce(pokemons, (_, pokemon) => {
+							// 判斷是否要查 IV 和技能
 							if (this.encounterList.indexOf(pokemon.pokemon_id) != -1) {
-								// encounter 取得 IV 和 Moves
+								// 遭遇 pokemon 取得 IV 和 Moves
 								return this.encounterPokemon(pokemon, this.requestDelay);
 							} else {
 								return pokemon;
 							}
 						}, null)
 							.then(() => {
+								// 全部結束，將 pokemons 丟給 GoPatrol
 								this.event.emit("scanComplete", point, pokemons);
 								resolve("scan complete");
 							})
