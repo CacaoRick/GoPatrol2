@@ -7,10 +7,11 @@ const Promise = require("bluebird");
 // this.event.emit("accountError", account, error);
 
 class Patrol {
-	constructor(config, account, event) {
+	constructor(requestDelay, encounterList, account, event) {
 		this.taskStop = false;
-		this.config = config;	// 這個 config 已經是 config.general 了
-		this.account = account;	// 單一帳號
+		this.requestDelay = requestDelay;
+		this.encounterList = encounterList;
+		this.account = account;
 		this.event = event;
 		this.client = new pogobuf.Client();
 		this.login = null;
@@ -44,7 +45,7 @@ class Patrol {
 				.then(() => {
 					// 把每一點巡邏跑完
 					new Promise.reduce(this.points, (_, point) => {
-						return this.scanPoint(point, this.config.requestDelay);
+						return this.scanPoint(point, this.requestDelay);
 					}, null).then(result => {
 						resolve({
 							username: this.account.username
@@ -84,14 +85,43 @@ class Patrol {
 						return cell.catchable_pokemons
 					})
 					.then(pokemons => {
+						// 用 encounter_id 篩選出不重複的 pokemons
 						pokemons = _.uniqBy(_.flatten(pokemons), "encounter_id");
-						this.event.emit("scanComplete", point, pokemons);
-						resolve("scan complete");
+
+						new Promise.reduce(pokemons, (_, pokemon) => {
+							if (this.encounterList.indexOf(pokemon.pokemon_id) != -1) {
+								// encounter 取得 IV 和 Moves
+								return this.encounterPokemon(pokemon, this.requestDelay);
+							} else {
+								return pokemon;
+							}
+						}, null)
+							.then(() => {
+								this.event.emit("scanComplete", point, pokemons);
+								resolve("scan complete");
+							})
 					});
 			}, delay);
 		}).catch(error => {
 			console.log(error.message);
 			return error.message;
+		});
+	}
+
+	encounterPokemon(pokemon, requestDelay) {
+		return new Promise((resolve, reject) => {
+			setTimeout(() => {
+				this.client.encounter(pokemon.encounter_id, pokemon.spawn_point_id)
+					.then(result => {
+						let data = result.wild_pokemon.pokemon_data;
+						pokemon.individual_attack = data.individual_attack;
+						pokemon.individual_defense = data.individual_defense;
+						pokemon.individual_stamina = data.individual_stamina;
+						pokemon.move_1 = data.move_1;
+						pokemon.move_2 = data.move_2;
+						resolve(pokemon);
+					});
+			}, requestDelay);
 		});
 	}
 }
