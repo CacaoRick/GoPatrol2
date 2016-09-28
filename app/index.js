@@ -10,11 +10,11 @@ const {ipcRenderer} = require("electron");
 
 // 設定檔
 let pathGeneral = "./config-general.json";
-let pathAccount = "./config-account.json";
 let pathLocation = "./config-location.json";
+let pathAccount = "./config-account.json";
 let configGeneral = null;
-let configAccount = null;
 let configLocation = null;
+let configAccount = null;
 
 // Google Maps
 let isLoadMapApi = false;
@@ -27,12 +27,12 @@ let latlngbounds = null;	// 用來調整地圖顯示位置
 let admins = [];	// 暫存管理員
 let channels = [];	// 暫存頻道
 let regexp = /^[a-zA-Z@][a-zA-Z0-9_]{3,29}[a-zA-Z0-9]$/;	// 用來檢查管理員使用者名稱和頻道ID
-// setting-account
-let accounts = [];	// 暫存帳號
-let tasks = [];		// 暫存任務
 // setting-location
 let patrolId = 0;	// 建立巡邏範圍用的流水號
 let markers = [];	// 額外加入 patrolId, patrolLocation {name, center, steps}
+// setting-account
+let accounts = [];	// 暫存帳號
+let tasks = [];		// 暫存任務
 
 $(() => {
 	// 載入 header
@@ -67,28 +67,28 @@ function stop() {
 // 載入設定檔
 function loadAllConfig() {
 	configGeneral = loadJsonConfig(pathGeneral);
-	configAccount = loadJsonConfig(pathAccount);
 	configLocation = loadJsonConfig(pathLocation);
+	configAccount = loadJsonConfig(pathAccount);
 
 	let isConfigured = true;
 	if (configGeneral == null) {
 		isConfigured = false;
 		addAlert("danger", "", `${buildAlertLink("一般設定", "setting-location.html")}尚未設定。`);
 	}
-	if (configAccount == null || configAccount.length <= 0) {
-		isConfigured = false;
-		addAlert("danger", "", `${buildAlertLink("帳號管理", "setting-location.html")}尚未設定。`);
-	}
 	if (configLocation == null || configLocation.length <= 0) {
 		isConfigured = false;
 		addAlert("danger", "", `${buildAlertLink("巡邏範圍", "setting-location.html")}尚未設定。`);
+	}
+	if (configAccount == null || configAccount.length <= 0) {
+		isConfigured = false;
+		addAlert("danger", "", `${buildAlertLink("帳號管理", "setting-location.html")}尚未設定。`);
 	}
 	if (isConfigured) {
 		// 都確認 OK 將設定傳給 main.js
 		sendConfig({
 			general: configGeneral,
-			account: configAccount,
-			location: configLocation
+			location: configLocation,
+			account: configAccount
 		});
 	}
 }
