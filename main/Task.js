@@ -6,25 +6,29 @@ const Patrol = require("./Patrol.js");
 const hexGrid = require("../util/hex-grid.js");
 
 class Task extends EventEmitter {
-	constructor(location, gopatrol) {
+	constructor(config, gopatrol) {
 		super();
+		this.config = config;
 		this.gopatrol = gopatrol;
 		this.isRunning = false;
 		this.patrols = [];
+		this.spawnpoints = [];
+	}
+
+	assignTask(location, accounts) {
 		this.location = location;
-		this.bindEvent();
+		this.accounts = accounts;
+		this.stop();
+		this.deletePatrols();
+		this.assignPatrols();
 	}
 
-	setConfig(config) {
-		this.config = config;
-	}
-
-	setAccount(accounts) {
+	assignPatrols() {
 		let patrolPoints = hexGrid.computePatrolPoints(this.location.center, this.location.steps);
-		let pointsPerWorker = Math.floor(patrolPoints.length / accounts.length);
-		let lastPoints = patrolPoints.length % accounts.length;
+		let pointsPerWorker = Math.floor(patrolPoints.length / this.accounts.length);
+		let lastPoints = patrolPoints.length % this.accounts.length;
 
-		accounts.forEach(account => {
+		this.accounts.forEach(account => {
 			let getPoints = pointsPerWorker;
 			if (lastPoints > 0) {
 				getPoints++;
@@ -37,17 +41,27 @@ class Task extends EventEmitter {
 			patrol.setPoints(points);
 			this.patrols.push(patrol);
 		});
+
+		this.bindEvent(); 
+	}
+
+	deletePatrols() {
+		this.removeAllListeners();
+		this.patrols.forEach(patrol => {
+			patrol = null;
+		});
+		this.patrols = [];
 	}
 
 	start() {
 		if (!this.isRunning) {
 			this.isRunning = true;
-			let runs = [];
+			let patrolPromises = [];
 			this.patrols.forEach(patrol => {
-				runs.push(patrol.run());
+				patrolPromises.push(patrol.run());
 			});
 
-			new Promise.all(runs)
+			new Promise.all(patrolPromises)
 				.then(status => {
 					this.isRunning = false;
 					console.log(status);
@@ -56,26 +70,26 @@ class Task extends EventEmitter {
 	}
 
 	stop() {
-		if (this.isRunning) {
-			this.isRunning = false;
-
-		}
+		this.isRunning = false;
 	}
 
 	bindEvent() {
 		this.gopatrol.on("start", () => {
+			console.log("task on start");
 			this.start();
 		});
 
 		this.gopatrol.on("stop", () => {
+			console.log("task on stop");
 			this.stop();
 		});
 
-		this.on("scannedPoint", (point, cell) => {
-
+		this.on("newPokemon", (point, pokemons) => {
+			console.log(`===== find ${pokemons.length} pokemons in ${point.latitude}, ${point.longitude} =====`);
+			console.log(pokemons);
 		});
 
-		this.on("scannedPoint", (account, error) => {
+		this.on("accountError", (account, error) => {
 
 		});
 	}
