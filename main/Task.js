@@ -8,6 +8,10 @@ const hexGrid = require("../util/hex-grid.js");
 class Task {
 	constructor(config, event) {
 		this.config = config;
+		let encounterPokemons = _.filter(config.general.pokemonList, pokemon => {
+			return pokemon.status;
+		}) 
+		this.encounterList = _.map(encounterPokemons, "id");
 		this.event = event;
 		this.isRunning = false;
 		this.patrols = [];
@@ -36,7 +40,7 @@ class Task {
 			}
 			let points = _.take(patrolPoints, getPoints);
 			patrolPoints = _.drop(patrolPoints, getPoints);
-			let patrol = new Patrol(this.config.general, account, this.event);
+			let patrol = new Patrol(this.config.general.requestDelay, this.encounterList, account, this.event);
 			patrol.setPoints(points);
 			this.patrols.push(patrol);
 		});
@@ -74,7 +78,11 @@ class Task {
 				}
 			})
 			.then(() => {
-				start();
+				if (this.isRunning) {
+					setTimeout(() => {
+						this.start();
+					}, this.config.general.requestDelay);
+				}
 			});
 	}
 
