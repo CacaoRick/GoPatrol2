@@ -56,9 +56,12 @@ function sendConfig(config) {
 	ipcRenderer.send("set-config", config);
 }
 
-// 叫 main.js 用瀏覽器開啟連結
 function start() {
 	ipcRenderer.send("start");
+}
+
+function stop() {
+	ipcRenderer.send("stop");
 }
 
 // 載入設定檔

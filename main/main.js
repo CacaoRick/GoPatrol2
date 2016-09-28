@@ -77,9 +77,13 @@ ipcMain.on("set-config", (event, arg) => {
 	gopatrol.setConfig(config);
 })
 
-ipcMain.on('start', (event, arg) => {
+ipcMain.on("start", (event, arg) => {
 	// 先做一些檢查
 
 	// 開始跑巡邏
 	gopatrol.start();
+})
+
+ipcMain.on("stop", (event, arg) => {
+	gopatrol.stop();
 })
