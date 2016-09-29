@@ -112,6 +112,10 @@ class Database {
 
 	// =============== SpawnPoint ===============
 
+	processSpawnPoint(pokemon) {
+
+	}
+	
 	isSpawnPointExists(spawn_point_id) {
 		this.Spawnpoint.findAll({
 			attributes: [[this.sequelize.fn('COUNT', this.sequelize.col('spawn_point_id')), 'count']],

@@ -83,6 +83,7 @@ class GoPatrol {
 					.spread((pokemon, created) => {
 						if (created) {
 							console.log(`新增 #${pokemon.dataValues.pokemon_id} ${this.pokemonNames[pokemon.dataValues.pokemon_id]} 結束於 ${pokemon.dataValues.disappear_time}`);
+							this.database.processSpawnPoint(pokemon);
 						}
 					});
 			});
