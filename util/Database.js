@@ -61,12 +61,13 @@ class Database {
 			disappear_time: { type: Sequelize.DATE }
 		}, {
 				timestamps: false,
-				freezeTableName: true
+				freezeTableName: true,
+				tableName: "scannedlocation"
 			}
 		);
 
 		this.SpawnPoint = this.sequelize.define("spawnpoint", {
-			spawnpoint_id: {
+			spawn_point_id: {
 				type: Sequelize.STRING,
 				primaryKey: true
 			},
@@ -76,7 +77,8 @@ class Database {
 			disappear_time: { type: Sequelize.DATE }
 		}, {
 				timestamps: false,
-				freezeTableName: true
+				freezeTableName: true,
+				tableName: "spawnpoint"
 			}
 		);
 
@@ -85,7 +87,7 @@ class Database {
 				type: Sequelize.STRING,
 				primaryKey: true
 			},
-			spawnpoint_id: { type: Sequelize.STRING },
+			spawn_point_id: { type: Sequelize.STRING },
 			pokemon_id: { type: Sequelize.INTEGER },
 			latitude: { type: Sequelize.FLOAT },
 			longitude: { type: Sequelize.FLOAT },
@@ -97,17 +99,23 @@ class Database {
 			disappear_time: { type: Sequelize.DATE }
 		}, {
 				timestamps: false,
-				freezeTableName: true
+				freezeTableName: true,
+				tableName: "pokemon"
 			}
 		);
+
+		this.sequelize.sync()
+			.catch(error => {
+				console.log(error);
+			});
 	}
 
-// =============== SpawnPoint ===============
+	// =============== SpawnPoint ===============
 
-	isSpawnPointExists(spawnpoint_id) {
-		Spawnpoint.findAll({
-			attributes: [[this.sequelize.fn('COUNT', this.sequelize.col('spawnpoint_id')), 'count']],
-			where: { spawnpoint_id: { $eq: spawnpoint_id } }
+	isSpawnPointExists(spawn_point_id) {
+		this.Spawnpoint.findAll({
+			attributes: [[this.sequelize.fn('COUNT', this.sequelize.col('spawn_point_id')), 'count']],
+			where: { spawn_point_id: { $eq: spawn_point_id } }
 		}).then(data => {
 			return data.dataValues.count > 0;
 		})
@@ -115,32 +123,27 @@ class Database {
 
 	insertSpawnPoint(spawnpoint) {
 		spawnpoint = _.defaults(spawnpoint, {
-			spawn_type: "0001"
+			spawn_type: "---1"
 		});
 
-		return SpawnPoint.create(spawnpoint);
+		return this.SpawnPoint.create(spawnpoint);
 	}
 
 	updateSpawnPoint(modify, where) {
-		return SpawnPoint.update(modify, where);
+		return this.SpawnPoint.update(modify, where);
 	}
 
-// =============== Pokemon ===============
+	// =============== Pokemon ===============
 
 	insertPokemon(pokemon) {
-		pokemon = _.defaults(pokemon, {
-			individual_attack: null,
-			individual_defense: null,
-			individual_stamina: null,
-			move_1: null,
-			move_2: null,
+		return this.Pokemon.findOrCreate({
+			where: { encounter_id: { $eq: pokemon.encounter_id } },
+			defaults: pokemon
 		});
-
-		return SpawnPoint.create(pokemon);
 	}
 
 	cleanTimeoutPokemon() {
-		return Pokemon.destroy({
+		return this.Pokemon.destroy({
 			where: {
 				disappear_time: {
 					$lte: Date.now()
@@ -151,14 +154,14 @@ class Database {
 
 	getAllPokemon() {
 		cleanPokemon().then(() => {
-			return Pokemon.findAll();
+			return this.Pokemon.findAll();
 		});
 	}
 
-// =============== ScannedLocation ===============
+	// =============== ScannedLocation ===============
 
 	insertScannedLocation(location, disappear_time) {
-		return SpawnPoint.create({
+		return this.ScannedLocation.create({
 			latitude: location.latitude,
 			longitude: location.longitude,
 			disappear_time: disappear_time
@@ -166,7 +169,7 @@ class Database {
 	}
 
 	cleanTimeoutScannedLocation() {
-		return ScannedLocation.destroy({
+		return this.ScannedLocation.destroy({
 			where: {
 				disappear_time: {
 					$lte: Date.now()
