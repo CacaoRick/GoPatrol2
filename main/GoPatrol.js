@@ -3,6 +3,8 @@ const _ = require("lodash");
 const EventEmitter = require("events");
 const moment = require("moment");
 const Database = require("../util/Database.js");
+const pokemonNames = require("../util/pokemon-names.js");
+const pokemonMoves = require("../util/pokemon-moves.js");
 const Task = require("./Task.js");
 
 class GoPatrol {
@@ -14,10 +16,16 @@ class GoPatrol {
 
 	setConfig(config) {
 		this.config = config;
+		this.mapPokemonNames();
 		this.database = new Database();
 		this.stop();
 		this.deleteTask();
 		this.assignTask();
+	}
+
+	mapPokemonNames() {
+		let keys = ["zh", "tw", "hk", "jp", "en"];
+		this.pokemonNames = _.map(pokemonNames, keys[this.config.general.pokemonNameId]);
 	}
 
 	assignTask() {
@@ -65,14 +73,17 @@ class GoPatrol {
 	bindEvent() {
 		this.event.on("scanComplete", (point, pokemons) => {
 			console.log(`- ${moment()}: find ${pokemons.length} pokemons in ${point.latitude}, ${point.longitude}`);
+			this.database.insertScannedLocation(point, moment() + moment({ minute: 10 }));
+
 			pokemons.forEach(pokemon => {
 				console.log(pokemon);
 
 				this.database.insertPokemon(pokemon)
-				.spread((pokemon, created) => {
-					console.log("pokemon: " + pokemon);
-					console.log("created: " + created);
-				});
+					.spread((pokemon, created) => {
+						if (created) {
+							console.log(`新增 #${pokemon.dataValues.pokemon_id} ${this.pokemonNames[pokemon.dataValues.pokemon_id]} 結束於 ${pokemon.dataValues.disappear_time}`);
+						}
+					});
 			});
 		});
 
