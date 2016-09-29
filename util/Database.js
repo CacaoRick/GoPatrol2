@@ -55,7 +55,7 @@ class Database {
 
 		this.sequelize = new Sequelize("gopatrol", username, password, options);
 
-		this.ScannedLocation = equelize.define("scannedlocation", {
+		this.ScannedLocation = this.sequelize.define("scannedlocation", {
 			latitude: { type: Sequelize.FLOAT },
 			longitude: { type: Sequelize.FLOAT },
 			disappear_time: { type: Sequelize.DATE }
@@ -65,7 +65,7 @@ class Database {
 			}
 		);
 
-		this.SpawnPoint = sequelize.define("spawnpoint", {
+		this.SpawnPoint = this.sequelize.define("spawnpoint", {
 			spawnpoint_id: {
 				type: Sequelize.STRING,
 				primaryKey: true
@@ -80,7 +80,7 @@ class Database {
 			}
 		);
 
-		this.Pokemon = sequelize.define("pokemon", {
+		this.Pokemon = this.sequelize.define("pokemon", {
 			encounter_id: {
 				type: Sequelize.STRING,
 				primaryKey: true
@@ -106,7 +106,7 @@ class Database {
 
 	isSpawnPointExists(spawnpoint_id) {
 		Spawnpoint.findAll({
-			attributes: [[sequelize.fn('COUNT', sequelize.col('spawnpoint_id')), 'count']],
+			attributes: [[this.sequelize.fn('COUNT', this.sequelize.col('spawnpoint_id')), 'count']],
 			where: { spawnpoint_id: { $eq: spawnpoint_id } }
 		}).then(data => {
 			return data.dataValues.count > 0;
