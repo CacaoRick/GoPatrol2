@@ -354,7 +354,7 @@ function saveConfig() {
 	configGeneral.channels = channels;
 	checkRequestDelay();
 	configGeneral.requestDelay = $("input#requestDelay").val();
-	configGeneral.pokemonNameId = $(`input[name="pokemonNameId"]:checked`).val(); 
+	configGeneral.pokemonNameId = parseInt($(`input[name="pokemonNameId"]:checked`).val()); 
 	configGeneral.pokemonList = [];
 	for (let id = 1; id <= 151; id++) {
 		checkIvFilter(id);
