@@ -88,7 +88,7 @@ class Patrol {
 					.then(pokemons => {
 						// 用 encounter_id 篩選出不重複的 pokemons
 						pokemons = _.uniqBy(_.flatten(pokemons), "encounter_id");
-						
+
 						// 更改 key 名稱 expiration_timestamp_ms -> disappear_time
 						pokemons.forEach(pokemon => {
 							pokemon.disappear_time = pokemon.expiration_timestamp_ms;
@@ -123,12 +123,14 @@ class Patrol {
 			setTimeout(() => {
 				this.client.encounter(pokemon.encounter_id, pokemon.spawn_point_id)
 					.then(result => {
-						let data = result.wild_pokemon.pokemon_data;
-						pokemon.individual_attack = data.individual_attack;
-						pokemon.individual_defense = data.individual_defense;
-						pokemon.individual_stamina = data.individual_stamina;
-						pokemon.move_1 = data.move_1;
-						pokemon.move_2 = data.move_2;
+						if (result.wild_pokemon != null) {
+							let data = result.wild_pokemon.pokemon_data;
+							pokemon.individual_attack = data.individual_attack;
+							pokemon.individual_defense = data.individual_defense;
+							pokemon.individual_stamina = data.individual_stamina;
+							pokemon.move_1 = data.move_1;
+							pokemon.move_2 = data.move_2;
+						}
 						resolve(pokemon);
 					});
 			}, requestDelay);
