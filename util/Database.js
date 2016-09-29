@@ -157,10 +157,25 @@ class Database {
 	// =============== ScannedLocation ===============
 
 	insertScannedLocation(location, disappear_time) {
-		return this.ScannedLocation.create({
-			latitude: location.latitude,
-			longitude: location.longitude,
-			disappear_time: disappear_time
+		return this.ScannedLocation.findOrCreate({
+			where: {
+				latitude: { $eq: location.latitude },
+				longitude: { $eq: location.longitude }
+			},
+			defaults: {
+				latitude: location.latitude,
+				longitude: location.longitude,
+				disappear_time: disappear_time
+			}
+		}).spread((scannedLocation, created) => {
+			if (!created) {
+				scannedLocation.update({ disappear_time: disappear_time }, {
+					where: {
+						latitude: { $eq: location.latitude },
+						longitude: { $eq: location.longitude }
+					}
+				});
+			}
 		});
 	}
 
