@@ -58,7 +58,7 @@ class Database {
 		this.ScannedLocation = this.sequelize.define("scannedlocation", {
 			latitude: { type: Sequelize.FLOAT },
 			longitude: { type: Sequelize.FLOAT },
-			disappear_time: { type: Sequelize.DATE }
+			disappear_time: { type: Sequelize.STRING }
 		}, {
 				timestamps: false,
 				freezeTableName: true,
@@ -74,7 +74,7 @@ class Database {
 			spawn_type: { type: Sequelize.STRING, defaultValue: "---1" },
 			latitude: { type: Sequelize.FLOAT },
 			longitude: { type: Sequelize.FLOAT },
-			disappear_time: { type: Sequelize.DATE }
+			disappear_time: { type: Sequelize.STRING }
 		}, {
 				timestamps: false,
 				freezeTableName: true,
@@ -96,7 +96,7 @@ class Database {
 			individual_stamina: { type: Sequelize.INTEGER },
 			move_1: { type: Sequelize.INTEGER },
 			move_2: { type: Sequelize.INTEGER },
-			disappear_time: { type: Sequelize.DATE }
+			disappear_time: { type: Sequelize.STRING }
 		}, {
 				timestamps: false,
 				freezeTableName: true,
