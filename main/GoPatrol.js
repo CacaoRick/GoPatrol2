@@ -14,7 +14,7 @@ class GoPatrol {
 
 	setConfig(config) {
 		this.config = config;
-		this.db = new Database();
+		this.database = new Database();
 		this.stop();
 		this.deleteTask();
 		this.assignTask();
@@ -65,7 +65,15 @@ class GoPatrol {
 	bindEvent() {
 		this.event.on("scanComplete", (point, pokemons) => {
 			console.log(`- ${moment()}: find ${pokemons.length} pokemons in ${point.latitude}, ${point.longitude}`);
-			console.log(pokemons);
+			pokemons.forEach(pokemon => {
+				console.log(pokemon);
+
+				this.database.insertPokemon(pokemon)
+				.spread((pokemon, created) => {
+					console.log("pokemon: " + pokemon);
+					console.log("created: " + created);
+				});
+			});
 		});
 
 		this.event.on("accountError", (account, error) => {
