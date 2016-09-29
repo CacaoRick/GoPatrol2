@@ -2,6 +2,7 @@
 const _ = require("lodash");
 const EventEmitter = require("events");
 const moment = require("moment");
+const Database = require("../util/Database.js");
 const Task = require("./Task.js");
 
 class GoPatrol {
@@ -13,6 +14,7 @@ class GoPatrol {
 
 	setConfig(config) {
 		this.config = config;
+		this.db = new Database();
 		this.stop();
 		this.deleteTask();
 		this.assignTask();
