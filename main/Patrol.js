@@ -88,6 +88,12 @@ class Patrol {
 					.then(pokemons => {
 						// 用 encounter_id 篩選出不重複的 pokemons
 						pokemons = _.uniqBy(_.flatten(pokemons), "encounter_id");
+						
+						// 更改 key 名稱 expiration_timestamp_ms -> disappear_time
+						pokemons.forEach(pokemon => {
+							pokemon.disappear_time = pokemon.expiration_timestamp_ms;
+							delete pokemon.expiration_timestamp_ms;
+						});
 
 						// 依序去跑每隻 pokemon
 						new Promise.reduce(pokemons, (_, pokemon) => {
