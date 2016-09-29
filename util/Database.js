@@ -71,7 +71,7 @@ class Database {
 				type: Sequelize.STRING,
 				primaryKey: true
 			},
-			spawn_type: { type: Sequelize.STRING },
+			spawn_type: { type: Sequelize.STRING, defaultValue: "---1" },
 			latitude: { type: Sequelize.FLOAT },
 			longitude: { type: Sequelize.FLOAT },
 			disappear_time: { type: Sequelize.DATE }
@@ -122,10 +122,6 @@ class Database {
 	}
 
 	insertSpawnPoint(spawnpoint) {
-		spawnpoint = _.defaults(spawnpoint, {
-			spawn_type: "---1"
-		});
-
 		return this.SpawnPoint.create(spawnpoint);
 	}
 
