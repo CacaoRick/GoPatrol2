@@ -53,5 +53,8 @@ config-general.json
 config-account.json
 config-location.json
 
+#sqlite
+*.sqlite
+
 # 用來測試東西
 try.js
