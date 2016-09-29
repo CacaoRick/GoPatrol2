@@ -6,6 +6,7 @@ const Database = require("../util/Database.js");
 const pokemonNames = require("../util/pokemon-names.js");
 const pokemonMoves = require("../util/pokemon-moves.js");
 const Task = require("./Task.js");
+const minutes15 = moment.duration(15, "minutes");
 
 class GoPatrol {
 	constructor() {
@@ -73,7 +74,7 @@ class GoPatrol {
 	bindEvent() {
 		this.event.on("scanComplete", (point, pokemons) => {
 			console.log(`- ${moment()}: find ${pokemons.length} pokemons in ${point.latitude}, ${point.longitude}`);
-			this.database.insertScannedLocation(point, moment() + moment({ minute: 10 }));
+			this.database.insertScannedLocation(point, moment() + minutes15);
 
 			pokemons.forEach(pokemon => {
 				console.log(pokemon);
