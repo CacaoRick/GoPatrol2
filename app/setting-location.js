@@ -157,8 +157,6 @@ function addMarker(patrolLocation) {
 		removePatrolCircles(marker);
 		// 重畫巡邏點和範圍
 		redrawPatrolCircle(marker);
-
-		console.log(configLocation[0].center);
 	});
 
 	// 存入 marker
