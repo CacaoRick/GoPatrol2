@@ -25,7 +25,7 @@ class GoPatrol {
 	}
 
 	mapPokemonNames() {
-		let keys = ["zh", "tw", "hk", "jp", "en"];
+		let keys = _.keys(pokemonNames);
 		this.pokemonNames = _.map(pokemonNames, keys[this.config.general.pokemonNameId]);
 	}
 
