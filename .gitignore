@@ -54,7 +54,8 @@ config-account.json
 config-location.json
 
 #sqlite
-*.sqlite
+database.sqlite
+database.sqlite-journal
 
 # 用來測試東西
 try.js
