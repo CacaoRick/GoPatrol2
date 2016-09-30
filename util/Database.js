@@ -41,7 +41,7 @@ class Database {
 	 */
 	constructor(username = null, password = null, options = {}) {
 		options = _.defaults(options, {
-			logging: false,
+			//logging: false,
 			dialect: "sqlite",
 			host: "localhost",
 			pool: {
@@ -49,6 +49,7 @@ class Database {
 				min: 0,
 				idle: 10000
 			},
+
 			// SQLite only
 			storage: "./database.sqlite"
 		});
@@ -115,82 +116,114 @@ class Database {
 	processSpawnPoint(pokemon) {
 
 	}
-	
+
 	isSpawnPointExists(spawn_point_id) {
-		this.Spawnpoint.findAll({
-			attributes: [[this.sequelize.fn('COUNT', this.sequelize.col('spawn_point_id')), 'count']],
-			where: { spawn_point_id: { $eq: spawn_point_id } }
-		}).then(data => {
-			return data.dataValues.count > 0;
-		})
+		this.Spawnpoint
+			.findAll({
+				attributes: [[this.sequelize.fn('COUNT', this.sequelize.col('spawn_point_id')), 'count']],
+				where: { spawn_point_id: { $eq: spawn_point_id } }
+			}).then(data => {
+				return data.dataValues.count > 0;
+			})
 	}
 
 	insertSpawnPoint(spawnpoint) {
-		return this.SpawnPoint.create(spawnpoint);
+		return this.SpawnPoint
+			.create(spawnpoint);
 	}
 
 	updateSpawnPoint(modify, where) {
-		return this.SpawnPoint.update(modify, where);
+		return this.SpawnPoint
+			.update(modify, where);
 	}
 
 	// =============== Pokemon ===============
 
 	insertPokemon(pokemon) {
-		return this.Pokemon.findOrCreate({
-			where: { encounter_id: { $eq: pokemon.encounter_id } },
-			defaults: pokemon
-		});
+		return this.Pokemon
+			.count({
+				where: {
+					encounter_id: { $eq: pokemon.encounter_id }
+				}
+			})
+			.then(count => {
+				if (count == 0) {
+					return this.Pokemon.create(pokemon);
+				} else {
+					return;
+				}
+			});
 	}
 
 	cleanTimeoutPokemon() {
-		return this.Pokemon.destroy({
-			where: {
-				disappear_time: {
-					$lte: Date.now()
+		return this.Pokemon
+			.destroy({
+				where: {
+					disappear_time: {
+						$lte: Date.now()
+					}
 				}
-			}
-		});
+			});
 	}
 
 	getAllPokemon() {
-		cleanPokemon().then(() => {
-			return this.Pokemon.findAll();
-		});
+		return cleanPokemon()
+			.then(() => {
+				return this.Pokemon.findAll();
+			});
 	}
 
 	// =============== ScannedLocation ===============
 
 	insertScannedLocation(location, disappear_time) {
-		return this.ScannedLocation.findOrCreate({
-			where: {
-				latitude: { $eq: location.latitude },
-				longitude: { $eq: location.longitude }
-			},
-			defaults: {
-				latitude: location.latitude,
-				longitude: location.longitude,
-				disappear_time: disappear_time
-			}
-		}).spread((scannedLocation, created) => {
-			if (!created) {
-				scannedLocation.update({ disappear_time: disappear_time }, {
-					where: {
-						latitude: { $eq: location.latitude },
-						longitude: { $eq: location.longitude }
-					}
-				});
-			}
-		});
+		return this.ScannedLocation
+			.count({
+				where: {
+					latitude: { $eq: location.latitude },
+					longitude: { $eq: location.longitude }
+				}
+			})
+			.then(count => {
+				if (count == 0) {
+					return this.ScannedLocation.create({
+						latitude: location.latitude,
+						longitude: location.longitude,
+						disappear_time: disappear_time
+					});
+				} else {
+					console.log("= update: " + location.latitude + ", " + location.longitude + " to " + disappear_time);
+					return this.ScannedLocation.update({ disappear_time: disappear_time }, {
+						where: {
+							latitude: { $eq: location.latitude },
+							longitude: { $eq: location.longitude }
+						}
+					});
+				}
+			})
+			.then(() => {
+				console.log("= update: " + location.latitude + ", " + location.longitude + " to " + disappear_time + " Success");
+			})
+			.catch(error => {
+				console.log("Error");
+				console.log(error.message);
+				if (error.message == "SQLITE_BUSY: database is locked") {
+					console.log("SQLITE_BUSY: database is locked， Retry after 500ms");
+					setTimeout(() => {
+						return insertScannedLocation(location, disappear_time);
+					}, 500);
+				}
+			});
 	}
 
 	cleanTimeoutScannedLocation() {
-		return this.ScannedLocation.destroy({
-			where: {
-				disappear_time: {
-					$lte: Date.now()
+		return this.ScannedLocation
+			.destroy({
+				where: {
+					disappear_time: {
+						$lte: Date.now()
+					}
 				}
-			}
-		});
+			});
 	}
 }
 
