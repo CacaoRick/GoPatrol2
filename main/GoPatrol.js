@@ -25,7 +25,7 @@ class GoPatrol {
 	}
 
 	mapPokemonNames() {
-		let keys = _.keys(pokemonNames);
+		let keys = _.keys(pokemonNames[1]);
 		this.pokemonNames = _.map(pokemonNames, keys[this.config.general.pokemonNameId]);
 	}
 
@@ -80,8 +80,8 @@ class GoPatrol {
 				console.log(pokemon);
 
 				this.database.insertPokemon(pokemon)
-					.spread((pokemon, created) => {
-						if (created) {
+					.then(pokemon => {
+						if (pokemon != null) {
 							console.log(`新增 #${pokemon.dataValues.pokemon_id} ${this.pokemonNames[pokemon.dataValues.pokemon_id]} 結束於 ${pokemon.dataValues.disappear_time}`);
 							this.database.processSpawnPoint(pokemon);
 						}
