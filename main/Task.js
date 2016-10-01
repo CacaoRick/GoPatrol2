@@ -74,7 +74,7 @@ class Task {
 			.map(result => {
 				if (result.error) {
 					this.event.emit("accountError", result.account, result.error);
-					removeAccount(result.username);
+					this.removeAccount(result.username);
 				}
 			})
 			.then(() => {
