@@ -150,7 +150,7 @@ class Database {
 				if (count == 0) {
 					return this.Pokemon.create(pokemon);
 				} else {
-					return;
+					return null;
 				}
 			});
 	}
