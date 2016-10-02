@@ -1,6 +1,6 @@
 "use strict";
-const Sequelize = require('sequelize');
 const _ = require('lodash');
+const Sequelize = require('sequelize');
 
 /**
  * Sequelize 文件：http://docs.sequelizejs.com/en/v3/
@@ -139,11 +139,29 @@ class Database {
 
 	// =============== Pokemon ===============
 
+	isNeedEncounter(pokemon) {
+		return this.Pokemon
+			.count({
+				where: {
+					encounter_id: { $eq: pokemon.encounter_id },
+					individual_attack: { $ne: null }
+				}
+			})
+			.then(count => {
+				if (count == 0) {
+					return true;
+				} else {
+					return false;
+				}
+			})
+	}
+
 	insertPokemon(pokemon) {
 		return this.Pokemon
 			.count({
 				where: {
-					encounter_id: { $eq: pokemon.encounter_id }
+					encounter_id: { $eq: pokemon.encounter_id },
+					disappear_time: { $eq: pokemon.disappear_time }
 				}
 			})
 			.then(count => {
@@ -191,26 +209,12 @@ class Database {
 						disappear_time: disappear_time
 					});
 				} else {
-					console.log("= update: " + location.latitude + ", " + location.longitude + " to " + disappear_time);
 					return this.ScannedLocation.update({ disappear_time: disappear_time }, {
 						where: {
 							latitude: { $eq: location.latitude },
 							longitude: { $eq: location.longitude }
 						}
 					});
-				}
-			})
-			.then(() => {
-				console.log("= update: " + location.latitude + ", " + location.longitude + " to " + disappear_time + " Success");
-			})
-			.catch(error => {
-				console.log("Error");
-				console.log(error.message);
-				if (error.message == "SQLITE_BUSY: database is locked") {
-					console.log("SQLITE_BUSY: database is locked， Retry after 500ms");
-					setTimeout(() => {
-						return insertScannedLocation(location, disappear_time);
-					}, 500);
 				}
 			});
 	}
