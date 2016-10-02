@@ -112,7 +112,28 @@ class Task {
 	// 處理成 {spawnpointId, latitude, longitude, type, disappearTime}，並存入資料庫中
 	processSpawnPoints(pokemons) {
 		pokemons.forEach(pokemon => {
-			spawnPoint = _.find(this.spawnPoints, {})
+			let isSpecial = false;
+			if (disappear_time < 0) {
+				// 特殊時間，設為現在
+				disappear_time = moment();
+				isSpecial = true;
+			}
+			let disappear_seconds = moment.duration(pokemon.disappear_time.get("minutes") * 60 + pokemon.disappear_time.get("seconds"), "seconds");
+			let spawnPoint = _.find(this.spawnPoints, {spawnpoint_id: pokemon.spawnpoint_id});
+			if (spawnPoint) {
+				// 有找到，判斷需不需要更新
+				
+			} else {
+				let spawn_type = isSpecial ? "---2" : "---1";
+				// 沒找到，新增
+				spawnPoint = {
+					spawnpoint_id: pokemon.spawnpoint_id,
+					spawn_type: spawn_type,
+					latitude: pokemon.latitude,
+					longitude: pokemon.longitude,
+					disappear_seconds: disappear_seconds.as("seconds")
+				}
+			}
 		});
 	}
 }
