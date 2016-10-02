@@ -72,10 +72,10 @@ class Database {
 				type: Sequelize.STRING,
 				primaryKey: true
 			},
-			spawn_type: { type: Sequelize.STRING, defaultValue: "---1" },
+			spawn_type: { type: Sequelize.STRING, defaultValue: "---1" },	// -: 尚無資料｜0: 不出現｜1: 出現｜2: 出現，但結束時間不明
 			latitude: { type: Sequelize.FLOAT },
 			longitude: { type: Sequelize.FLOAT },
-			disappear_time: { type: Sequelize.STRING }
+			disappear_seconds: { type: Sequelize.STRING }
 		}, {
 				timestamps: false,
 				freezeTableName: true,
