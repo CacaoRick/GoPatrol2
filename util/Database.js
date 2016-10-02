@@ -68,7 +68,7 @@ class Database {
 		);
 
 		this.SpawnPoint = this.sequelize.define("spawnpoint", {
-			spawn_point_id: {
+			spawnpoint_id: {
 				type: Sequelize.STRING,
 				primaryKey: true
 			},
@@ -88,7 +88,7 @@ class Database {
 				type: Sequelize.STRING,
 				primaryKey: true
 			},
-			spawn_point_id: { type: Sequelize.STRING },
+			spawnpoint_id: { type: Sequelize.STRING },
 			pokemon_id: { type: Sequelize.INTEGER },
 			latitude: { type: Sequelize.FLOAT },
 			longitude: { type: Sequelize.FLOAT },
@@ -117,11 +117,11 @@ class Database {
 
 	}
 
-	isSpawnPointExists(spawn_point_id) {
+	isSpawnPointExists(spawnpoint_id) {
 		this.Spawnpoint
 			.findAll({
-				attributes: [[this.sequelize.fn('COUNT', this.sequelize.col('spawn_point_id')), 'count']],
-				where: { spawn_point_id: { $eq: spawn_point_id } }
+				attributes: [[this.sequelize.fn('COUNT', this.sequelize.col('spawnpoint_id')), 'count']],
+				where: { spawnpoint_id: { $eq: spawnpoint_id } }
 			}).then(data => {
 				return data.dataValues.count > 0;
 			})

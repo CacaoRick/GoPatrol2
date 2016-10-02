@@ -64,6 +64,7 @@ class Task {
 			let hexPointForPatrols = this.assignHexPoints(this.hexPoints);
 			let patrolPromises = [];
 			this.patrols.forEach((patrol, index) => {
+				patrol.setTask(this);
 				patrol.setPoints(hexPointForPatrols[index]);
 				patrolPromises.push(patrol.run());
 			});
@@ -106,6 +107,13 @@ class Task {
 		});
 
 		return hexPointForPatrols;
+	}
+
+	// 處理成 {spawnpointId, latitude, longitude, type, disappearTime}，並存入資料庫中
+	processSpawnPoints(pokemons) {
+		pokemons.forEach(pokemon => {
+			spawnPoint = _.find(this.spawnPoints, {})
+		});
 	}
 }
 

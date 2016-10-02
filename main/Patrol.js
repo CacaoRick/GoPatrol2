@@ -7,6 +7,7 @@ const Database = require("../util/Database.js");
 
 class Patrol {
 	constructor(event, database, account, encounterList, requestDelay) {
+		this.task = null;
 		this.patrolStop = false;
 		this.event = event;
 		this.database = database;
@@ -15,6 +16,10 @@ class Patrol {
 		this.requestDelay = requestDelay;
 		
 		this.bindEvent();
+	}
+
+	setTask(task) {
+		this.task = task;
 	}
 
 	setPoints(points) {
@@ -95,9 +100,11 @@ class Patrol {
 						// 用 encounter_id 篩選出不重複的 pokemons
 						pokemons = _.uniqBy(_.flatten(pokemons), "encounter_id");
 
-						// 更改 key 名稱 expiration_timestamp_ms -> disappear_time
+						// 更改 key 名稱 expiration_timestamp_ms -> disappear_time，spawn_point_id -> spawnpoint_id
 						pokemons.forEach(pokemon => {
+							pokemon.spawnpoint_id = pokemon.spawn_point_id;
 							pokemon.disappear_time = pokemon.expiration_timestamp_ms;
+							delete pokemon.spawn_point_id;
 							delete pokemon.expiration_timestamp_ms;
 						});
 
@@ -122,6 +129,7 @@ class Patrol {
 							.then(() => {
 								// 全部結束，將 pokemons 丟給 GoPatrol
 								this.event.emit("scanComplete", point, pokemons);
+								this.task.processSpawnPoints(pokemons);
 								resolve("scan complete");
 							})
 					});
@@ -135,7 +143,7 @@ class Patrol {
 	encounterPokemon(pokemon, requestDelay) {
 		return new Promise((resolve, reject) => {
 			setTimeout(() => {
-				this.client.encounter(pokemon.encounter_id, pokemon.spawn_point_id)
+				this.client.encounter(pokemon.encounter_id, pokemon.spawnpoint_id)
 					.then(result => {
 						if (result.wild_pokemon != null) {
 							let data = result.wild_pokemon.pokemon_data;
