@@ -12,8 +12,8 @@ let win;
 // 設定檔
 let config = {
 	general: null,
-	account: null,
-	location: null
+	accounts: null,
+	locations: null
 }
 
 function createWindow() {
@@ -67,10 +67,10 @@ ipcMain.on("set-config", (event, arg) => {
 		config.general = arg.general;
 	}
 	if (arg.account){
-		config.account = arg.account;
+		config.accounts = arg.account;
 	}
 	if (arg.location){
-		config.location = arg.location;
+		config.locations = arg.location;
 	}
 	
 	// 將設定傳給 gopatrol
