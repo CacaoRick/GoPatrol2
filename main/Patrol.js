@@ -1,15 +1,27 @@
 "use strict";
 const _ = require("lodash");
+const moment = require("moment");
 const pogobuf = require("pogobuf");
 const Promise = require("bluebird");
+const Database = require("../util/Database.js");
 
 class Patrol {
-	constructor(requestDelay, encounterList, account, event) {
-		this.taskStop = false;
-		this.requestDelay = requestDelay;
-		this.encounterList = encounterList;
-		this.account = account;
+	constructor(event, database, account, encounterList, requestDelay) {
+		this.patrolStop = false;
 		this.event = event;
+		this.database = database;
+		this.account = account;
+		this.encounterList = encounterList;
+		this.requestDelay = requestDelay;
+		
+		this.bindEvent();
+	}
+
+	setPoints(points) {
+		this.points = points;
+	}
+
+	run() {
 		this.client = new pogobuf.Client();
 		this.login = null;
 		if (this.account.provider == "ptc") {
@@ -18,20 +30,14 @@ class Patrol {
 		if (this.account.provider == "google") {
 			this.login = new pogobuf.GoogleLogin();
 		}
-	}
-
-	setPoints(points) {
-		this.points = points;
-	}
-
-	run() {
 		return new Promise((resolve, reject) => {
-			if (this.taskStop) {
+			if (this.patrolStop) {
 				return resolve("task stop");
 			}
 			if (this.login == null) {
 				return reject(Error(`provider 設定錯誤`));
 			}
+			console.log("======================================================================= start run " + moment().format("LTS"));
 			this.login.login(this.account.username, this.account.password)
 				.then(token => {
 					// 登入 Client
@@ -62,12 +68,12 @@ class Patrol {
 
 	scanPoint(point, delay) {
 		return new Promise((resolve, reject) => {
-			if (this.taskStop) {
+			if (this.patrolStop) {
 				resolve("task stop");
 				return;
 			}
 			setTimeout(() => {
-				if (this.taskStop) {
+				if (this.patrolStop) {
 					resolve("task stop");
 					return;
 				}
@@ -99,8 +105,16 @@ class Patrol {
 						new Promise.reduce(pokemons, (_, pokemon) => {
 							// 判斷是否要查 IV 和技能
 							if (this.encounterList.indexOf(pokemon.pokemon_id) != -1) {
-								// 遭遇 pokemon 取得 IV 和 Moves
-								return this.encounterPokemon(pokemon, this.requestDelay);
+								// 先判斷是否已經有 IV 了
+								return this.database.isNeedEncounter(pokemon)
+								.then(isNeedEncounter => {
+									if (isNeedEncounter) {
+										// 遭遇 pokemon 取得 IV 和 Moves
+										return this.encounterPokemon(pokemon, this.requestDelay);
+									} else {
+										return pokemon;
+									}
+								})
 							} else {
 								return pokemon;
 							}
@@ -135,6 +149,12 @@ class Patrol {
 					});
 			}, requestDelay);
 		});
+	}
+
+	bindEvent() {
+		this.event.on("stop", () => {
+			this.patrolStop = true;
+		})
 	}
 }
 
