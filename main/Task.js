@@ -112,6 +112,51 @@ class Task {
 	// 處理成 {spawnpointId, latitude, longitude, type, disappearTime}，並存入資料庫中
 	processSpawnPoints(pokemons) {
 		pokemons.forEach(pokemon => {
+			// 找出原有的 spawnPoint
+			let spawnPoint = _.find(this.spawnPoints, {spawnpoint_id: pokemon.spawnpoint_id});
+			if (spawnPoint) {
+				if (pokemon.disappear_time < 0) {
+					pokemon.disappear_seconds = getDisappearSeconds(pokemon.disappear_time);
+					pokemon.disappear_time = moment();
+					if (_.split(spawnPoint.type, "")[3] == 2) {
+						// spawnPoint 原本的時間異常
+						if (spawnPoint.disappear_seconds - pokemon.disappear_seconds > 0) {
+
+						}
+						// 			if 舊的時間.isAfter的時間
+						// 				計算新的時間是在第幾個15分鐘
+						// 				更新type
+						// 			else
+						// 				將舊的type 和時間（可能有多個）轉換為時間陣列
+						// 				計算以新時間為第四格時，舊時間們是在第幾個15分鐘
+						// 				更新type和disappear_minutes
+					} else {
+						// spawnPoint 原本的時間正常
+						
+						// 			計算新的時間在第幾個15分鐘
+						// 			更新type
+					}
+					
+				} else {
+					// 		if 舊的時間異常
+					// 			將舊的type 和時間（可能有多個）轉換為時間陣列
+					// 			計算以新時間為第四格時，舊時間們在第幾個15分鐘
+					// 			更新type和disappear_minutes
+					// 		else
+					// 			取大值更新disappear_minutes
+					// 			Database.updateSpawnPoint()
+				}
+			} else {
+				// 	if 時間異常
+				// 		建立一個spawn point type=---2
+				// 	else
+				// 		建立一個spawn point type=---1
+				// 		Database.insertSpawnPoint()
+			}
+
+			
+			
+
 			let isSpecial = false;
 			if (disappear_time < 0) {
 				// 特殊時間，設為現在
@@ -119,7 +164,7 @@ class Task {
 				isSpecial = true;
 			}
 			let disappear_seconds = moment.duration(pokemon.disappear_time.get("minutes") * 60 + pokemon.disappear_time.get("seconds"), "seconds");
-			let spawnPoint = _.find(this.spawnPoints, {spawnpoint_id: pokemon.spawnpoint_id});
+			
 			if (spawnPoint) {
 				// 有找到，判斷需不需要更新
 				
@@ -139,3 +184,12 @@ class Task {
 }
 
 module.exports = Task;
+
+function getDisappearSeconds(disappear_time) {
+	if (!moment.isMoment(disappear_time)) {
+		disappear_time = moment(disappear_time);
+	}
+
+	let disappear_seconds = moment.duration(disappear_time.get("minutes") * 60 + disappear_time.get("seconds"), "seconds");
+	return disappear_seconds.as("seconds");
+}
